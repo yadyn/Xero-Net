@@ -14,7 +14,7 @@ namespace CoreTests.Integration.Items
         {
             Given_a_tracked_item();
 
-            Api.Items.Delete(CreatedItem);
+            Api.Items.DeleteAsync(CreatedItem);
 
             Its_not_there_when_I_try_to_find_it(CreatedItem);
         }
@@ -43,17 +43,17 @@ namespace CoreTests.Integration.Items
 
         private void When_I_try_to_Delete_it_404s()
         {
-            Assert.Throws<NotFoundException>(() => Api.Items.Delete(CreatedItem));
+            Assert.Throws<NotFoundException>(() => Api.Items.DeleteAsync(CreatedItem));
         }
 
         private void When_I_try_to_Delete_it_400s()
         {
-            Assert.Throws<ValidationException>(() => Api.Items.Delete(CreatedItem));
+            Assert.Throws<ValidationException>(() => Api.Items.DeleteAsync(CreatedItem));
         }
 
         private void Its_not_there_when_I_try_to_find_it(Item theItem)
         {
-            Assert.Throws<NotFoundException>(() => Api.Items.Find(theItem.Id));
+            Assert.Throws<NotFoundException>(() => Api.Items.FindAsync(theItem.Id));
         }
     }
 }

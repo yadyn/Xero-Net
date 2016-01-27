@@ -48,7 +48,7 @@ namespace CoreTests.Integration.Invoices
         [Test]
         public void multiple_lineitems()
         {
-            var invoice = Api.Create(new Invoice
+            var invoice = Api.CreateAsync(new Invoice
             {
                 Contact = new Contact { Name = "ABC Limited" },
                 Type = InvoiceType.AccountsReceivable,
@@ -79,7 +79,7 @@ namespace CoreTests.Integration.Invoices
         [Test]
         public void multiple_invoices()
         {
-            var invoices = Api.Create(new[]
+            var invoices = Api.CreateAsync(new[]
             {
                 new Invoice
                 {
@@ -120,7 +120,7 @@ namespace CoreTests.Integration.Invoices
         [Test]
         public void high_precision_unit()
         {
-            var invoice = Api.Create(
+            var invoice = Api.CreateAsync(
                 new Invoice
                 {
                     Contact = new Contact { Name = "ABC Limited" },
@@ -143,7 +143,7 @@ namespace CoreTests.Integration.Invoices
         [Test]
         public void low_precision_unit()
         {
-            var invoices = Api.Invoices.UseFourDecimalPlaces(false).Create(new[]
+            var invoices = Api.Invoices.UseFourDecimalPlaces(false).CreateAsync(new[]
             {
                 new Invoice
                 {
@@ -178,7 +178,7 @@ namespace CoreTests.Integration.Invoices
             var paymentDate = DateTime.Now.AddDays(20).Date;
             var reference = "Ref:" + Random.GetRandomString(10);
             
-            var invoices = Api.Invoices.Create(new[]
+            var invoices = Api.Invoices.CreateAsync(new[]
             {
                 new Invoice
                 {
@@ -248,7 +248,7 @@ namespace CoreTests.Integration.Invoices
             var item = Api.Items
                 .Where("Code.StartsWith(\"Woo-hoo\")")
                 .And("Description != null")
-                .Find()
+                .FindAsync()
                 .FirstOrDefault();
 
             if (item == null)
@@ -256,7 +256,7 @@ namespace CoreTests.Integration.Invoices
                 Assert.False(false, "No items");
             }
 
-            var invoice = Api.Create(new Invoice
+            var invoice = Api.CreateAsync(new Invoice
             {
                 Contact = new Contact { Name = "ABC Limited" },
                 Type = InvoiceType.AccountsReceivable,

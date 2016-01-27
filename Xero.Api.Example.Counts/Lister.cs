@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xero.Api.Core;
 
 namespace Xero.Api.Example.Counts
@@ -14,62 +15,62 @@ namespace Xero.Api.Example.Counts
             _api = api;
         }
 
-        public void List()
+        public async Task ListAsync()
         {
-            Console.WriteLine("Your organisation is called {0}", _api.Organisation.LegalName);
+            Console.WriteLine("Your organisation is called {0}", (await _api.GetDefaultOrganisationAsync()).LegalName);
 
-            Console.WriteLine("There are {0} accounts", _api.Accounts.Find().Count());
-            Console.WriteLine("There are {0} bank transactions", _api.BankTransactions.Find().Count());
-            Console.WriteLine("There are {0} bank transfers", _api.BankTransfers.Find().Count());
-            Console.WriteLine("There are {0} branding themes", _api.BrandingThemes.Find().Count());
-            Console.WriteLine("There are {0} contacts", GetTotalContactCount());
-            Console.WriteLine("There are {0} credit notes", _api.CreditNotes.Find().Count());
-            Console.WriteLine("There are {0} currencies", _api.Currencies.Find().Count());
-            Console.WriteLine("There are {0} employees", _api.Employees.Find().Count());
-            Console.WriteLine("There are {0} expense claims", _api.ExpenseClaims.Find().Count());
-            Console.WriteLine("There are {0} defined items", _api.Items.Find().Count());
-            Console.WriteLine("There are {0} invoices", GetTotalInvoiceCount());
-            Console.WriteLine("There are {0} journal entries", _api.Journals.Find().Count());
-            Console.WriteLine("There are {0} manual journal entries", _api.ManualJournals.Find().Count());
-            Console.WriteLine("There are {0} payments", _api.Payments.Find().Count());
-            Console.WriteLine("There are {0} receipts", _api.Receipts.Find().Count());
-            Console.WriteLine("There are {0} repeating invoices", _api.RepeatingInvoices.Find().Count());
-            Console.WriteLine("There are {0} tax rates", _api.TaxRates.Find().Count());
-            Console.WriteLine("There are {0} tracking categories", _api.TrackingCategories.Find().Count());
-            Console.WriteLine("There are {0} users", _api.Users.Find().Count());
+            Console.WriteLine("There are {0} accounts", (await _api.Accounts.FindAsync()).Count());
+            Console.WriteLine("There are {0} bank transactions", (await _api.BankTransactions.FindAsync()).Count());
+            Console.WriteLine("There are {0} bank transfers", (await _api.BankTransfers.FindAsync()).Count());
+            Console.WriteLine("There are {0} branding themes", (await _api.BrandingThemes.FindAsync()).Count());
+            Console.WriteLine("There are {0} contacts", (await GetTotalContactCountAsync()));
+            Console.WriteLine("There are {0} credit notes", (await _api.CreditNotes.FindAsync()).Count());
+            Console.WriteLine("There are {0} currencies", (await _api.Currencies.FindAsync()).Count());
+            Console.WriteLine("There are {0} employees", (await _api.Employees.FindAsync()).Count());
+            Console.WriteLine("There are {0} expense claims", (await _api.ExpenseClaims.FindAsync()).Count());
+            Console.WriteLine("There are {0} defined items", (await _api.Items.FindAsync()).Count());
+            Console.WriteLine("There are {0} invoices", (await GetTotalInvoiceCountAsync()));
+            Console.WriteLine("There are {0} journal entries", (await _api.Journals.FindAsync()).Count());
+            Console.WriteLine("There are {0} manual journal entries", (await _api.ManualJournals.FindAsync()).Count());
+            Console.WriteLine("There are {0} payments", (await _api.Payments.FindAsync()).Count());
+            Console.WriteLine("There are {0} receipts", (await _api.Receipts.FindAsync()).Count());
+            Console.WriteLine("There are {0} repeating invoices", (await _api.RepeatingInvoices.FindAsync()).Count());
+            Console.WriteLine("There are {0} tax rates", (await _api.TaxRates.FindAsync()).Count());
+            Console.WriteLine("There are {0} tracking categories", (await _api.TrackingCategories.FindAsync()).Count());
+            Console.WriteLine("There are {0} users", (await _api.Users.FindAsync()).Count());
 
             
             ListReports(_api.Reports.Named, "named");
-            ListReports(_api.Reports.Published, "published");
+            ListReports((await _api.Reports.GetPublishedAsync()), "published");
 
             Console.WriteLine("Done!");
             Console.ReadLine();
         }
 
-        private int GetTotalContactCount()
+        private async Task<int> GetTotalContactCountAsync()
         {
-            int count = _api.Contacts.Find().Count();
+            int count = (await _api.Contacts.FindAsync()).Count();
             int total = count;
             int page = 2;
 
             while(count == 100)
             {
-                count = _api.Contacts.Page(page++).Find().Count();
+                count = (await _api.Contacts.Page(page++).FindAsync()).Count();
                 total += count;
             }
 
             return total;
         }
 
-        private int GetTotalInvoiceCount()
+        private async Task<int> GetTotalInvoiceCountAsync()
         {
-            int count = _api.Invoices.Find().Count();
+            int count = (await _api.Invoices.FindAsync()).Count();
             int total = count;
             int page = 2;
 
             while (count == 100)
             {
-                count = _api.Invoices.Page(page++).Find().Count();
+                count = (await _api.Invoices.Page(page++).FindAsync()).Count();
                 total += count;
             }
 

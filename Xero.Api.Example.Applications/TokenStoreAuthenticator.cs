@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using Xero.Api.Infrastructure.Interfaces;
 using Xero.Api.Infrastructure.OAuth;
 
@@ -40,21 +41,23 @@ namespace Xero.Api.Example.Applications
             return null;            
         }
 
-        public string GetSignature(IConsumer consumer, IUser user, Uri uri, string verb, IConsumer consumer1)
+        public async Task<string> GetSignatureAsync(IConsumer consumer, IUser user, Uri uri, string verb, IConsumer consumer1)
         {
-            return GetAuthorization(GetToken(consumer, user), verb, uri.AbsolutePath, uri.Query);
+            var token = await GetTokenAsync(consumer, user);
+
+            return GetAuthorization(token, verb, uri.AbsolutePath, uri.Query);
         }
 
-        public IToken GetToken(IConsumer consumer, IUser user)
+        public async Task<IToken> GetTokenAsync(IConsumer consumer, IUser user)
         {
             if (!HasStore)
-                return GetToken(consumer);
+                return await GetTokenAsync(consumer);
 
             var token = Store.Find(user.Name);
 
             if (token == null)
             {
-                token = GetToken(consumer);
+                token = await GetTokenAsync(consumer);
                 token.UserId = user.Name;
 
                 Store.Add(token);
@@ -65,7 +68,7 @@ namespace Xero.Api.Example.Applications
             if (!token.HasExpired)
                 return token;
             
-            var newToken = RenewToken(token, consumer);
+            var newToken = await RenewTokenAsync(token, consumer);
             newToken.UserId = user.Name;
 
             Store.Delete(token);
@@ -85,15 +88,15 @@ namespace Xero.Api.Example.Applications
         protected abstract string CreateSignature(IToken token, string verb, Uri uri, string verifier,
             bool renewToken = false, string callback = null);
 
-        protected abstract IToken RenewToken(IToken sessionToken, IConsumer consumer);
+        protected abstract Task<IToken> RenewTokenAsync(IToken sessionToken, IConsumer consumer);
 
-        protected virtual IToken GetToken(IConsumer consumer)
+        protected virtual async Task<IToken> GetTokenAsync(IConsumer consumer)
         {
-            var requestToken = GetRequestToken(consumer);
+            var requestToken = await GetRequestTokenAsync(consumer);
    
             var verifier = AuthorizeUser(requestToken);
 
-            return Tokens.GetAccessToken(requestToken,
+            return await Tokens.GetAccessTokenAsync(requestToken,
                 GetAuthorization(requestToken, "POST", Tokens.AccessUri, null, verifier));
         }
 
@@ -105,7 +108,7 @@ namespace Xero.Api.Example.Applications
             }.Uri.ToString();
         }
 
-        protected IToken GetRequestToken(IConsumer consumer)
+        protected Task<IToken> GetRequestTokenAsync(IConsumer consumer)
         {
             var token = new Token
             {
@@ -115,7 +118,7 @@ namespace Xero.Api.Example.Applications
             
             var requestTokenOAuthHeader = GetAuthorization(token, "POST", Tokens.RequestUri, callback: CallBackUri);
 
-            return Tokens.GetRequestToken(consumer, requestTokenOAuthHeader);
+            return Tokens.GetRequestTokenAsync(consumer, requestTokenOAuthHeader);
         }
 
         protected string GetAuthorization(IToken token, string verb, string endpoint, string query = null,

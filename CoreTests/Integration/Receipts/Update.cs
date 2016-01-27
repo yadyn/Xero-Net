@@ -15,9 +15,9 @@ namespace CoreTests.Integration.Receipts
             const ReceiptStatus expected = ReceiptStatus.Deleted;
             const decimal value = 13.8m;
 
-            var receipt = Given_a_receipt(Api.Users.Find().First().Id, contact, description, value, "420");
+            var receipt = Given_a_receipt(Api.Users.FindAsync().First().Id, contact, description, value, "420");
             receipt.Status = expected;
-            var deletedReceipt = Api.Update(receipt);
+            var deletedReceipt = Api.UpdateAsync(receipt);
 
             Assert.AreEqual(expected, deletedReceipt.Status);
         }

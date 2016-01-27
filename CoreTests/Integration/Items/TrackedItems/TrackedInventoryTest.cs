@@ -35,7 +35,7 @@ namespace CoreTests.Integration.Items.TrackedItems
 
             var code = "Tracked Item" + Random.GetRandomString(10);
 
-            var item = Api.Items.Create(new Item
+            var item = Api.Items.CreateAsync(new Item
             {
                 Code = code,
                 Description = "Sell me",
@@ -76,7 +76,7 @@ namespace CoreTests.Integration.Items.TrackedItems
 
             var code = "Untracked Item" + Random.GetRandomString(10);
 
-            var item = Api.Items.Create(new Item
+            var item = Api.Items.CreateAsync(new Item
             {
                 Code = code,
                 Description = "Sell me",
@@ -104,11 +104,11 @@ namespace CoreTests.Integration.Items.TrackedItems
 
         protected void Given_a_direct_cost_account()
         {
-            var directCostsAccount = Api.Accounts.Where("Type == \"DIRECTCOSTS\"").Find().FirstOrDefault();
+            var directCostsAccount = Api.Accounts.Where("Type == \"DIRECTCOSTS\"").FindAsync().FirstOrDefault();
 
             if (directCostsAccount == null)
             {
-                directCostsAccount = Api.Accounts.Create(new Account
+                directCostsAccount = Api.Accounts.CreateAsync(new Account
                 {
                     Code = Random.GetRandomString(10),
                     Type = AccountType.DirectCosts,
@@ -122,11 +122,11 @@ namespace CoreTests.Integration.Items.TrackedItems
 
         protected void Given_a_revenue_account()
         {
-            var revenueAccount = Api.Accounts.Where("Type == \"REVENUE\"").Find().FirstOrDefault();
+            var revenueAccount = Api.Accounts.Where("Type == \"REVENUE\"").FindAsync().FirstOrDefault();
 
             if (revenueAccount == null)
             {
-                revenueAccount = Api.Accounts.Create(new Account
+                revenueAccount = Api.Accounts.CreateAsync(new Account
                 {
                     Code = Random.GetRandomString(10),
                     Type = AccountType.Revenue,
@@ -140,11 +140,11 @@ namespace CoreTests.Integration.Items.TrackedItems
 
         protected void Given_an_inventory_account()
         {
-            var inventoryAccount = Api.Accounts.Where("Type == \"INVENTORY\"").Find().FirstOrDefault();
+            var inventoryAccount = Api.Accounts.Where("Type == \"INVENTORY\"").FindAsync().FirstOrDefault();
 
             if (inventoryAccount == null)
             {
-                inventoryAccount = Api.Accounts.Create(new Account
+                inventoryAccount = Api.Accounts.CreateAsync(new Account
                 {
                     Code = Random.GetRandomString(10),
                     Type = AccountType.Inventory,
@@ -178,7 +178,7 @@ namespace CoreTests.Integration.Items.TrackedItems
 
             };
 
-            CreatedAccpayInvoice = Api.Invoices.Create(invoice);
+            CreatedAccpayInvoice = Api.Invoices.CreateAsync(invoice);
         }
 
 
@@ -211,7 +211,7 @@ namespace CoreTests.Integration.Items.TrackedItems
                 
             };
 
-            CreatedAccpayInvoice = Api.Invoices.Create(invoice);
+            CreatedAccpayInvoice = Api.Invoices.CreateAsync(invoice);
         }
 
         protected void Given_an_ACCREC_invoice_using_the_item_with_code(string code)
@@ -235,7 +235,7 @@ namespace CoreTests.Integration.Items.TrackedItems
                 }
             };
 
-            CreatedAccrecInvoice = Api.Invoices.Create(invoice);
+            CreatedAccrecInvoice = Api.Invoices.CreateAsync(invoice);
         }
 
         protected void Given_a_zero_total_ACCREC_invoice_using_the_item_with_code(string code)
@@ -267,7 +267,7 @@ namespace CoreTests.Integration.Items.TrackedItems
 
             };
 
-            CreatedAccrecInvoice = Api.Invoices.Create(invoice);
+            CreatedAccrecInvoice = Api.Invoices.CreateAsync(invoice);
         }
     }
 }

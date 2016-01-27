@@ -9,7 +9,7 @@ namespace PayrollTests.AU.Integration.LeaveApplications
 
         public LeaveApplication Given_a_leave_application()
         {
-            var la = Api.Create(new LeaveApplication
+            var la = Api.CreateAsync(new LeaveApplication
             {
                 EmployeeId = Given_an_employee().Id,
                 LeaveTypeId = the_leavetype_id(),
@@ -25,7 +25,7 @@ namespace PayrollTests.AU.Integration.LeaveApplications
 
         public Employee Given_an_employee()
         {
-            var employee = Api.Create(new Employee
+            var employee = Api.CreateAsync(new Employee
             {
                 FirstName = "Keith " + Guid.NewGuid().ToString("N"),
                 LastName = "Morgan",
@@ -40,22 +40,22 @@ namespace PayrollTests.AU.Integration.LeaveApplications
 
         public Guid the_leavetype_id()
         {
-            return Api.PayItems.Find().FirstOrDefault().LeaveTypes.FirstOrDefault().Id;
+            return Api.PayItems.FindAsync().FirstOrDefault().LeaveTypes.FirstOrDefault().Id;
         }
 
 
 
         public Guid employee_payroll_calendar_id()
         {
-            var payruns = Api.PayRuns.Where("PayRunStatus == \"DRAFT\"").Find();
+            var payruns = Api.PayRuns.Where("PayRunStatus == \"DRAFT\"").FindAsync();
             if (payruns.FirstOrDefault().Id != Guid.Empty)
             {
                 return payruns.FirstOrDefault().PayrollCalendarId;
             }
             else
             {
-                var payroll_calendar_id = Api.PayrollCalendars.Find().First().Id;
-                Api.Create(new PayRun
+                var payroll_calendar_id = Api.PayrollCalendars.FindAsync().First().Id;
+                Api.CreateAsync(new PayRun
                 {
                     PayrollCalendarId = payroll_calendar_id
                 });
@@ -67,7 +67,7 @@ namespace PayrollTests.AU.Integration.LeaveApplications
 
         public Guid earning_rates_id()
         {
-            var er = Api.PayItems.Find();
+            var er = Api.PayItems.FindAsync();
             return er.FirstOrDefault().EarningsRates.FirstOrDefault().Id;
         }
 

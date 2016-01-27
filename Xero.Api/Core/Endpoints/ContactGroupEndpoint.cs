@@ -2,53 +2,60 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Xero.Api.Core.Endpoints.Base;
 using Xero.Api.Core.Model;
-using Xero.Api.Core.Model.Setup;
 using Xero.Api.Core.Request;
 using Xero.Api.Core.Response;
 using Xero.Api.Infrastructure.Http;
 
 namespace Xero.Api.Core.Endpoints
 {
-
     public class ContactGroupsEndpoint : XeroUpdateEndpoint<ContactGroupsEndpoint,ContactGroup,ContactGroupsRequest,ContactGroupsResponse> 
     {
-
         public ContactGroupsEndpoint(XeroHttpClient client) : base(client,"/api.xro/2.0/ContactGroups")
         {
-            
         }
 
-        public ContactCollection this[Guid guid]
+        //public ContactCollection this[Guid guid]
+        //{
+        //    get
+        //    {
+        //        var endpoint = string.Format("/api.xro/2.0/ContactGroups/{0}",guid);
+
+        //        var group = HandleResponse(Client
+        //            .Client
+        //            .GetAsync(endpoint,null))
+        //            .ContactGroups.SingleOrDefault();
+
+        //        var collection = new ContactCollection(Client, group);
+
+        //        return collection;
+        //    }
+        //}
+
+        public async Task<ContactCollection> GetAsync(Guid guid)
         {
-            get
-            {
-                var endpoint = string.Format("/api.xro/2.0/ContactGroups/{0}",guid);
+            var endpoint = string.Format("/api.xro/2.0/ContactGroups/{0}", guid);
 
-                var group = HandleResponse(Client
-                    .Client
-                    .Get(endpoint,null))
-                    .ContactGroups.SingleOrDefault();
+            var response = HandleResponse(await Client
+                .Client
+                .GetAsync(endpoint, null));
 
-                var collection = new ContactCollection(Client, group);
+            var collection = new ContactCollection(Client, response.ContactGroups.SingleOrDefault());
 
-                return collection;
-            }
+            return collection;
         }
 
-        public ContactGroup Add(ContactGroup contactGroup)
+        public async Task<ContactGroup> AddAsync(ContactGroup contactGroup)
         {
             var endpoint = string.Format("/api.xro/2.0/ContactGroups");
 
-            var groups = HandleResponse(Client
+            var result = HandleResponse(await Client
                 .Client
-                .Put(endpoint, Client.XmlMapper.To(new List<ContactGroup> { contactGroup })))
-                .ContactGroups;
+                .PutAsync(endpoint, Client.XmlMapper.To(new List<ContactGroup> { contactGroup })));
 
-            return groups.FirstOrDefault();
+            return result.ContactGroups.FirstOrDefault();
         }
         
         private ContactGroupsResponse HandleResponse(Infrastructure.Http.Response response)
@@ -78,52 +85,50 @@ namespace Xero.Api.Core.Endpoints
             _client = client;
         }
 
-        public void Clear()
+        public async Task ClearAsync()
         {
             var endpoint = string.Format("/api.xro/2.0/ContactGroups/{0}/Contacts", _group.Id);
 
-            var groups = HandleResponse(Client
+            var response = HandleResponse(await Client
                 .Client
-                .Delete(endpoint));
+                .DeleteAsync(endpoint));
         }
 
-        public void Add(Contact contact)
+        public Task AddAsync(Contact contact)
         {
             var contactList = new List<Contact>();
 
             contactList.Add(contact);
-            
-            AssignContacts(_group, contactList);
 
+            return AssignContactsAsync(_group, contactList);
         }
 
-        public void AddRange(List<Contact> contacts)
+        public Task AddRangeAsync(List<Contact> contacts)
         {
-            AssignContacts(_group,contacts);
+            return AssignContactsAsync(_group,contacts);
         }
 
-        public void Remove(Guid guid)
+        public Task RemoveAsync(Guid guid)
         {
-            UnAssignContact(_group, guid);
+            return UnAssignContactAsync(_group, guid);
         }
 
-        private void UnAssignContact(ContactGroup contactGroup, Guid contactId)
+        private async Task UnAssignContactAsync(ContactGroup contactGroup, Guid contactId)
         {
             var endpoint = string.Format("/api.xro/2.0/ContactGroups/{0}/Contacts/{1}", contactGroup.Id, contactId);
 
-            var groups = HandleResponse(Client
+            var groups = HandleResponse(await Client
                 .Client
-                .Delete(endpoint));
-
+                .DeleteAsync(endpoint));
         }
 
-        private void AssignContacts(ContactGroup contactGroup, List<Contact> contacts)
+        private async Task AssignContactsAsync(ContactGroup contactGroup, List<Contact> contacts)
         {
             var endpoint = string.Format("/api.xro/2.0/ContactGroups/{0}/Contacts", contactGroup.Id);
 
-            var groups = HandleResponse(_client
+            var groups = HandleResponse(await _client
                 .Client
-                .Put(endpoint, _client.XmlMapper.To(contacts)))
+                .PutAsync(endpoint, _client.XmlMapper.To(contacts)))
                 .ContactGroups;
         }
 

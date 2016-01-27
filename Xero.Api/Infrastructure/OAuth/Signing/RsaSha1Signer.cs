@@ -10,9 +10,9 @@ using Xero.Api.Infrastructure.ThirdParty.Dust.Http;
 
 namespace Xero.Api.Infrastructure.OAuth.Signing
 {
-    public class RsaSha1Signer
+    public static class RsaSha1Signer
     {
-        public string CreateSignature(X509Certificate2 certificate, IToken token, Uri uri, string verb,
+        public static string CreateSignature(X509Certificate2 certificate, IToken token, Uri uri, string verb,
             string verifier = null, bool renewToken = false, string callback = null)
         {
             var oAuthParameters = new OAuthParameters(

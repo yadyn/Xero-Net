@@ -21,7 +21,7 @@ namespace CoreTests.Integration.ManualJournals
 
             manual.Narration = expected;
 
-            var updated = Api.Update(manual);
+            var updated = Api.UpdateAsync(manual);
 
             Assert.AreEqual(DateTime.Now.Date, updated.Date);
             Assert.AreEqual(expected, updated.Narration);            

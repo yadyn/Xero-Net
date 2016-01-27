@@ -12,7 +12,7 @@ namespace CoreTests.Integration.LinkedTransactions
             Given_a_contact();
             LinkedTransaction.ContactID = ContactId;
 
-            var linkedTransaction = Api.LinkedTransactions.Update(LinkedTransaction);
+            var linkedTransaction = Api.LinkedTransactions.UpdateAsync(LinkedTransaction);
 
             Assert.True(linkedTransaction.Id == LinkedTransactionId);
             Then_the_contact_details_are_correct(linkedTransaction, ContactId);
@@ -28,7 +28,7 @@ namespace CoreTests.Integration.LinkedTransactions
             LinkedTransaction.TargetTransactionID = TargetId;
             LinkedTransaction.TargetLineItemID = TargetLineItemId;
 
-            var linkedTransaction = Api.LinkedTransactions.Update(LinkedTransaction);
+            var linkedTransaction = Api.LinkedTransactions.UpdateAsync(LinkedTransaction);
 
             Assert.True(linkedTransaction.Id == LinkedTransactionId);
             Then_the_contact_details_are_correct(linkedTransaction, ContactId);

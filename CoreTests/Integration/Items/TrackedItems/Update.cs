@@ -15,7 +15,7 @@ namespace CoreTests.Integration.Items.TrackedItems
             CreatedItem.PurchaseDetails.AccountCode = null;
             CreatedItem.PurchaseDetails.COGSAccountCode = DirectCostsAccountCode;
 
-            var updatedItem = Api.Items.Update(CreatedItem);
+            var updatedItem = Api.Items.UpdateAsync(CreatedItem);
 
             Assert.AreEqual(updatedItem.Id, CreatedItem.Id, "Expected the item's ID to be the same after creating and updating but they were different.");
             Assert.IsTrue(updatedItem.IsTrackedAsInventory, "Expected the item's IsTrackedAsInventory value to be true but was false");
@@ -31,7 +31,7 @@ namespace CoreTests.Integration.Items.TrackedItems
             CreatedItem.InventoryAssetAccountCode = null;
             CreatedItem.IsPurchased = false;
 
-            var updatedItem = Api.Items.Update(CreatedItem);
+            var updatedItem = Api.Items.UpdateAsync(CreatedItem);
 
             Assert.AreEqual(updatedItem.Id, CreatedItem.Id, "Expected the item's ID to be the same after creating and updating but they were different.");
             Assert.IsFalse(updatedItem.IsTrackedAsInventory, "Expected the item's IsTrackedAsInventory value to be false but was true");
@@ -50,7 +50,7 @@ namespace CoreTests.Integration.Items.TrackedItems
             CreatedItem.PurchaseDetails.AccountCode = DirectCostsAccountCode;
             CreatedItem.PurchaseDetails.COGSAccountCode = null;
 
-            var updatedItem = Api.Items.Update(CreatedItem);
+            var updatedItem = Api.Items.UpdateAsync(CreatedItem);
 
             Assert.AreEqual(updatedItem.Id, CreatedItem.Id, "Expected the item's ID to be the same after creating and updating but they were different.");
             Assert.IsFalse(updatedItem.IsTrackedAsInventory, "Expected the item's IsTrackedAsInventory value to be false but was true");
@@ -65,7 +65,7 @@ namespace CoreTests.Integration.Items.TrackedItems
             CreatedItem.PurchaseDetails.COGSAccountCode = null;
             CreatedItem.InventoryAssetAccountCode = null;
 
-            var updatedItem = Api.Items.Update(CreatedItem);
+            var updatedItem = Api.Items.UpdateAsync(CreatedItem);
 
             Assert.AreEqual(updatedItem.Id, CreatedItem.Id, "Expected the item's ID to be the same after creating and updating but they were different.");
             Assert.IsFalse(updatedItem.IsTrackedAsInventory, "Expected the item's IsTrackedAsInventory value to be false but was true");

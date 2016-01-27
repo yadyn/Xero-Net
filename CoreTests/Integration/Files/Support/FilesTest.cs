@@ -48,7 +48,7 @@ namespace CoreTests.Integration.Files.Support
 
         protected Guid Given_a_file_in(Guid folderId,Xero.Api.Core.Model.File file )
         {
-            var result = Api.Files.Add(folderId, file, exampleFile);
+            var result = Api.Files.AddAsync(folderId, file, exampleFile);
 
             return result.Id ;
         }

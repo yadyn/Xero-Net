@@ -12,7 +12,7 @@ namespace CoreTests.Integration.BankTransfers
         {
             Given_a_bank_transfer(10m);
 
-            var allTransfers = Api.BankTransfers.Find();
+            var allTransfers = Api.BankTransfers.FindAsync();
 
             Assert.Greater(allTransfers.Count(), 0);
         }
@@ -22,7 +22,7 @@ namespace CoreTests.Integration.BankTransfers
         {
             var expected = Given_a_bank_transfer(25m).Id;
 
-            var id = Api.BankTransfers.Find(expected).Id;
+            var id = Api.BankTransfers.FindAsync(expected).Id;
 
             Assert.AreEqual(expected, id);
         }
@@ -33,7 +33,7 @@ namespace CoreTests.Integration.BankTransfers
             Given_a_bank_transfer(25m);
 
             var date = DateTime.Today.AddDays(-4);
-            var bankTransfers = Api.BankTransfers.ModifiedSince(date).Find();
+            var bankTransfers = Api.BankTransfers.ModifiedSince(date).FindAsync();
 
             Assert.Greater(bankTransfers.Count(), 0);
         }

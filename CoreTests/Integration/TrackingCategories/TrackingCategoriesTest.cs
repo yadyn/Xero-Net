@@ -29,7 +29,7 @@ namespace CoreTests.Integration.TrackingCategories
             Api.TrackingCategories[category1_.Id].Add(option1);
             Api.TrackingCategories[category1_.Id].Add(option2);
 
-            category1_ = Api.TrackingCategories.GetByID(category1_.Id);
+            category1_ = Api.TrackingCategories.GetByIDAsync(category1_.Id);
         }
 
         public void Given_a_TrackingCategory_with_Option()
@@ -40,12 +40,12 @@ namespace CoreTests.Integration.TrackingCategories
 
             Api.TrackingCategories[category1_.Id].Add(option1);
 
-            category1_ = Api.TrackingCategories.GetByID(category1_.Id);
+            category1_ = Api.TrackingCategories.GetByIDAsync(category1_.Id);
         }
 
         public void Given_a_TrackingCategory()
         {
-            category1_ = Api.TrackingCategories.Add(new TrackingCategory
+            category1_ = Api.TrackingCategories.AddAsync(new TrackingCategory
             {
                 Name = "TheJoker " + Guid.NewGuid(),
                 Status = TrackingCategoryStatus.Active
@@ -58,13 +58,13 @@ namespace CoreTests.Integration.TrackingCategories
 
         public void Given_two_TrackingCategorys()
         {
-            category1_ = Api.TrackingCategories.Add(new TrackingCategory
+            category1_ = Api.TrackingCategories.AddAsync(new TrackingCategory
             {
                 Name = "TheJoker " + Guid.NewGuid(),
                 Status = TrackingCategoryStatus.Active
             });
 
-            category2_ = Api.TrackingCategories.Add(new TrackingCategory
+            category2_ = Api.TrackingCategories.AddAsync(new TrackingCategory
             {
                 Name = "HarleyQuinn " + Guid.NewGuid(),
                 Status = TrackingCategoryStatus.Active
@@ -95,7 +95,7 @@ namespace CoreTests.Integration.TrackingCategories
         {
             category1_.Name = "The Joker";
 
-            var result = Api.Update(category1_);
+            var result = Api.UpdateAsync(category1_);
 
             Assert.True(result.Name == "The Joker");
         }
@@ -106,7 +106,7 @@ namespace CoreTests.Integration.TrackingCategories
             string name = category1_.Name;
             string option = category1_.Options.FirstOrDefault().Name;
 
-            var inv = Api.Create(new Invoice
+            var inv = Api.CreateAsync(new Invoice
             {
                 Contact = new Contact { Name = "Wayne Enterprises" },
                 Type = type,
@@ -136,18 +136,18 @@ namespace CoreTests.Integration.TrackingCategories
             });
 
             inv.Status = InvoiceStatus.Authorised;
-            invoice_ = Api.Update(inv);
+            invoice_ = Api.UpdateAsync(inv);
         }
 
         public Invoice Given_Invoice_is_voided()
         {
             invoice_.Status = InvoiceStatus.Voided;
-            return Api.Update(invoice_);
+            return Api.UpdateAsync(invoice_);
         }
 
         public void Given_Tracking_Category_is_deleted()
         {
-            category1_ = Api.TrackingCategories.Delete(category1_);
+            category1_ = Api.TrackingCategories.DeleteAsync(category1_);
 
             Assert.True(category1_.Status == TrackingCategoryStatus.Deleted);
         }
@@ -156,14 +156,14 @@ namespace CoreTests.Integration.TrackingCategories
         {
             Given_Tracking_Category_is_deleted();
 
-            category2_ = Api.TrackingCategories.Delete(category2_);
+            category2_ = Api.TrackingCategories.DeleteAsync(category2_);
 
             Assert.True(category2_.Status == TrackingCategoryStatus.Deleted);
         }
 
         public void Given_Tracking_CategoryOption_is_deleted()
         {
-            var result = Api.TrackingCategories.DeleteTrackingOption(category1_, category1_.Options.FirstOrDefault());
+            var result = Api.TrackingCategories.DeleteTrackingOptionAsync(category1_, category1_.Options.FirstOrDefault());
 
             Assert.IsTrue(result.Status == TrackingOptionStatus.Deleted);
         }
@@ -181,7 +181,7 @@ namespace CoreTests.Integration.TrackingCategories
         {
             category1_.Status = TrackingCategoryStatus.Archived;
 
-            category1_ = Api.TrackingCategories.Update(category1_);
+            category1_ = Api.TrackingCategories.UpdateAsync(category1_);
 
             Assert.True(category1_.Status == TrackingCategoryStatus.Archived);
         }
@@ -209,7 +209,7 @@ namespace CoreTests.Integration.TrackingCategories
 
         public void Then_Category_Has_Options()
         {
-            var result = Api.TrackingCategories.GetByID(category1_.Id);
+            var result = Api.TrackingCategories.GetByIDAsync(category1_.Id);
 
             Assert.True(result != null);
             Assert.True(result.Options.Count() == 2);
@@ -220,14 +220,14 @@ namespace CoreTests.Integration.TrackingCategories
 
         public void Given_GetAll()
         {
-            listresult_ = Api.TrackingCategories.GetAll();
+            listresult_ = Api.TrackingCategories.GetAllAsync();
         }
 
         public void Given_GetAll_with_Archived()
         {
             var api = Api.TrackingCategories.IncludeArchived(true);
 
-            listresult_ = api.GetAll();
+            listresult_ = api.GetAllAsync();
         }
 
         public void Then_Archieved_Tracking_Category_is_in_list()

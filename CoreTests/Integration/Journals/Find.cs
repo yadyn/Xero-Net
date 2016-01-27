@@ -9,7 +9,7 @@ namespace CoreTests.Integration.Journals
         [Test]
         public void find_journals()
         {
-            var journals = Api.Journals.Find();
+            var journals = Api.Journals.FindAsync();
 
             Assert.That(journals.Any());
         }
@@ -17,14 +17,14 @@ namespace CoreTests.Integration.Journals
         [Test]
         public void find_journals_offset()
         {
-            var journals = Api.Journals.Find().ToList();
+            var journals = Api.Journals.FindAsync().ToList();
 
             if (journals.Count() == 100)
             {
                 var offset = journals.Max(p => p.Number);
 
                 Assert.That(Api.Journals.Offset(offset)
-                    .Find()
+                    .FindAsync()
                     .Any());
             }
         }

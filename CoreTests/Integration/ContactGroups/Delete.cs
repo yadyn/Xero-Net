@@ -17,7 +17,7 @@ namespace CoreTests.Integration.ContactGroups
 
             contactgroup.Status = "DELETED";
 
-            var group = Api.Update(contactgroup);
+            var group = Api.UpdateAsync(contactgroup);
 
             Assert.IsTrue(group.Status == "DELETED" );
         }

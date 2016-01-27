@@ -13,7 +13,7 @@ namespace CoreTests.Integration.Contacts
         {
             Given_a_contact();
 
-            Assert.True(Api.Contacts.Page(1).Find().Any());
+            Assert.True(Api.Contacts.Page(1).FindAsync().Any());
         }
 
         [Test]
@@ -22,7 +22,7 @@ namespace CoreTests.Integration.Contacts
             var expected = Given_a_contact().Id;
             
             var id = Api.Contacts
-                .Find(expected)
+                .FindAsync(expected)
                 .Id;
 
             Assert.AreEqual(expected, id);
@@ -35,7 +35,7 @@ namespace CoreTests.Integration.Contacts
 
             var name = Api.Contacts
                 .Where(string.Format("Name == \"{0}\"", expected))
-                .Find()
+                .FindAsync()
                 .Select(p => p.Name);                
 
             Assert.True(name.All(p => p == expected));
@@ -48,7 +48,7 @@ namespace CoreTests.Integration.Contacts
 
             var contacts = Api.Contacts
                 .Where(string.Format("Name.Contains(\"{0}\")", expected))
-                .Find()
+                .FindAsync()
                 .Select(p => p.Name);
 
             Assert.True(contacts.All(p => p.Contains(expected)));            
@@ -61,7 +61,7 @@ namespace CoreTests.Integration.Contacts
 
             var status = Api.Contacts
                 .Where("ContactStatus == \"ACTIVE\"")
-                .Find()
+                .FindAsync()
                 .Select(p => p.ContactStatus);                
 
             Assert.True(status.All(p => p == ContactStatus.Active));
@@ -76,7 +76,7 @@ namespace CoreTests.Integration.Contacts
             var contacts = Api.Contacts
                 .ModifiedSince(date)
                 .OrderByDescending("UpdatedDateUTC")                
-                .Find()
+                .FindAsync()
                 .Select(p => p.Id)
                 .ToList();
 
@@ -95,7 +95,7 @@ namespace CoreTests.Integration.Contacts
                 .Where(string.Format("UpdatedDateUTC >= DateTime.Parse(\"{0}\")", fromDate.ToString("yyyy-MM-dd")))
                 .And(string.Format("UpdatedDateUTC <= DateTime.Parse(\"{0}\")", toDate.ToString("yyyy-MM-dd")))
                 .OrderByDescending("UpdatedDateUTC")
-                .Find()
+                .FindAsync()
                 .Select(p => p.Id)
                 .ToList();
 

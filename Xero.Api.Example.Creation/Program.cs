@@ -17,10 +17,11 @@ namespace Xero.Api.Example.Creation
             };
 
             var creator = new Creator.Creator();
-            new ApiDataCreation(api).Create(10, 10,
+            new ApiDataCreation(api).CreateAsync(10, 10,
                 creator.People(5),
                 creator.Addresses(5),
-                creator.Descriptions(5));
+                creator.Descriptions(5)
+            ).GetAwaiter().GetResult();
         }
     }
 }

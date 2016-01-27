@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Xero.Api.Infrastructure.Interfaces;
 using Xero.Api.Infrastructure.OAuth.Signing;
 
@@ -29,9 +30,9 @@ namespace Xero.Api.Example.Applications.Public
             return new HmacSha1Signer().CreateSignature(token, uri, verb, verifier, callback);
         }
 
-        protected override IToken RenewToken(IToken sessionToken, IConsumer consumer)
+        protected override Task<IToken> RenewTokenAsync(IToken sessionToken, IConsumer consumer)
         {
-            return GetToken(consumer);
+            return GetTokenAsync(consumer);
         }
     }   
 }

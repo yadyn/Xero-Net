@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xero.Api.Infrastructure.Interfaces;
 using Xero.Api.Infrastructure.RateLimiter;
 using Xero.Api.Payroll.Australia.Endpoints;
@@ -62,154 +63,154 @@ namespace Xero.Api.Payroll
             Settings = new SettingsEndpoint(Client);
         }
 
-        public IEnumerable<LeaveApplication> Create(IEnumerable<LeaveApplication> items)
+        public Task<IEnumerable<LeaveApplication>> CreateAsync(IEnumerable<LeaveApplication> items)
         {
-            return LeaveApplications.Create(items);
+            return LeaveApplications.CreateAsync(items);
         }
 
-        public IEnumerable<Payslip> Create(IEnumerable<Payslip> items)
+        public Task<IEnumerable<Payslip>> CreateAsync(IEnumerable<Payslip> items)
         {
-            return Payslips.Create(items);
+            return Payslips.CreateAsync(items);
         }
 
-        public IEnumerable<SuperFund> Create(IEnumerable<SuperFund> items)
+        public Task<IEnumerable<SuperFund>> CreateAsync(IEnumerable<SuperFund> items)
         {
-            return SuperFunds.Create(items);
+            return SuperFunds.CreateAsync(items);
         }
 
-        public IEnumerable<Employee> Create(IEnumerable<Employee> items)
+        public Task<IEnumerable<Employee>> CreateAsync(IEnumerable<Employee> items)
         {
-            return Employees.Create(items);
+            return Employees.CreateAsync(items);
         }
 
-        public IEnumerable<PayRun> Create(IEnumerable<PayRun> items)
+        public Task<IEnumerable<PayRun>> CreateAsync(IEnumerable<PayRun> items)
         {
-            return PayRuns.Create(items);
+            return PayRuns.CreateAsync(items);
         }
 
-        public IEnumerable<Timesheet> Create(IEnumerable<Timesheet> items)
+        public Task<IEnumerable<Timesheet>> CreateAsync(IEnumerable<Timesheet> items)
         {
-            return Timesheets.Create(items);
+            return Timesheets.CreateAsync(items);
         }
 
-        public IEnumerable<PayrollCalendar> Create(IEnumerable<PayrollCalendar> items)
+        public Task<IEnumerable<PayrollCalendar>> CreateAsync(IEnumerable<PayrollCalendar> items)
         {
-            return PayrollCalendars.Create(items);
+            return PayrollCalendars.CreateAsync(items);
         }
 
-        public LeaveApplication Create(LeaveApplication item)
+        public Task<LeaveApplication> CreateAsync(LeaveApplication item)
         {
-            return LeaveApplications.Create(item);
+            return LeaveApplications.CreateAsync(item);
         }
 
-        public Payslip Create(Payslip item)
+        public Task<Payslip> CreateAsync(Payslip item)
         {
-            return Payslips.Create(item);
+            return Payslips.CreateAsync(item);
         }
 
-        public SuperFund Create(SuperFund item)
+        public Task<SuperFund> CreateAsync(SuperFund item)
         {
-            return SuperFunds.Create(item);
+            return SuperFunds.CreateAsync(item);
         }
 
-        public Employee Create(Employee item)
+        public Task<Employee> CreateAsync(Employee item)
         {
-            return Employees.Create(item);
+            return Employees.CreateAsync(item);
         }
 
-        public PayRun Create(PayRun item)
+        public Task<PayRun> CreateAsync(PayRun item)
         {
-            return PayRuns.Create(item);
+            return PayRuns.CreateAsync(item);
         }
 
-        public Timesheet Create(Timesheet item)
+        public Task<Timesheet> CreateAsync(Timesheet item)
         {
-            return Timesheets.Create(item);
+            return Timesheets.CreateAsync(item);
         }
 
-        public PayItems Create(PayItems item)
+        public Task<PayItems> CreateAsync(PayItems item)
         {
-            return PayItems.Create(item);
+            return PayItems.CreateAsync(item);
         }
 
-        public PayrollCalendar Create(PayrollCalendar item)
+        public Task<PayrollCalendar> CreateAsync(PayrollCalendar item)
         {
-            return PayrollCalendars.Create(item);
+            return PayrollCalendars.CreateAsync(item);
         }
 
-        public IEnumerable<LeaveApplication> Update(IEnumerable<LeaveApplication> items)
+        public Task<IEnumerable<LeaveApplication>> UpdateAsync(IEnumerable<LeaveApplication> items)
         {
-            return LeaveApplications.Update(items);
+            return LeaveApplications.UpdateAsync(items);
         }
 
-        public IEnumerable<Payslip> Update(IEnumerable<Payslip> items)
+        public Task<IEnumerable<Payslip>> UpdateAsync(IEnumerable<Payslip> items)
         {
-            return Payslips.Update(items);
+            return Payslips.UpdateAsync(items);
         }
 
-        public IEnumerable<SuperFund> Update(IEnumerable<SuperFund> items)
+        public Task<IEnumerable<SuperFund>> UpdateAsync(IEnumerable<SuperFund> items)
         {
-            return SuperFunds.Update(items);
+            return SuperFunds.UpdateAsync(items);
         }
 
-        public IEnumerable<Employee> Update(IEnumerable<Employee> items)
+        public Task<IEnumerable<Employee>> UpdateAsync(IEnumerable<Employee> items)
         {
-            return Employees.Update(items);
+            return Employees.UpdateAsync(items);
         }
 
-        public IEnumerable<PayRun> Update(IEnumerable<PayRun> items)
+        public Task<IEnumerable<PayRun>> UpdateAsync(IEnumerable<PayRun> items)
         {
-            return PayRuns.Update(items);
+            return PayRuns.UpdateAsync(items);
         }
 
-        public IEnumerable<Timesheet> Update(IEnumerable<Timesheet> items)
+        public Task<IEnumerable<Timesheet>> UpdateAsync(IEnumerable<Timesheet> items)
         {
-            return Timesheets.Update(items);
+            return Timesheets.UpdateAsync(items);
         }
 
-        public IEnumerable<PayrollCalendar> Update(IEnumerable<PayrollCalendar> items)
+        public Task<IEnumerable<PayrollCalendar>> UpdateAsync(IEnumerable<PayrollCalendar> items)
         {
-            return PayrollCalendars.Update(items);
+            return PayrollCalendars.UpdateAsync(items);
         }
 
-        public LeaveApplication Update(LeaveApplication item)
+        public Task<LeaveApplication> UpdateAsync(LeaveApplication item)
         {
-            return LeaveApplications.Update(item);
+            return LeaveApplications.UpdateAsync(item);
         }
 
-        public Payslip Update(Payslip item)
+        public Task<Payslip> UpdateAsync(Payslip item)
         {
-            return Payslips.Update(item);
+            return Payslips.UpdateAsync(item);
         }
 
-        public SuperFund Update(SuperFund item)
+        public Task<SuperFund> UpdateAsync(SuperFund item)
         {
-            return SuperFunds.Update(item);
+            return SuperFunds.UpdateAsync(item);
         }
 
-        public Employee Update(Employee item)
+        public Task<Employee> UpdateAsync(Employee item)
         {
-            return Employees.Update(item);
+            return Employees.UpdateAsync(item);
         }
 
-        public PayRun Update(PayRun item)
+        public Task<PayRun> UpdateAsync(PayRun item)
         {
-            return PayRuns.Update(item);
+            return PayRuns.UpdateAsync(item);
         }
 
-        public Timesheet Update(Timesheet item)
+        public Task<Timesheet> UpdateAsync(Timesheet item)
         {
-            return Timesheets.Update(item);
+            return Timesheets.UpdateAsync(item);
         }
 
-        public PayItems Update(PayItems item)
+        public Task<PayItems> UpdateAsync(PayItems item)
         {
-            return PayItems.Update(item);
+            return PayItems.UpdateAsync(item);
         }
 
-        public PayrollCalendar Update(PayrollCalendar item)
+        public Task<PayrollCalendar> UpdateAsync(PayrollCalendar item)
         {
-            return PayrollCalendars.Update(item);
+            return PayrollCalendars.UpdateAsync(item);
         }
     }
 }

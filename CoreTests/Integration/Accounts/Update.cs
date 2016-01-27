@@ -17,9 +17,9 @@ namespace CoreTests.Integration.Accounts
 
             account.Description = expectedDescription;
 
-            Api.Accounts.Update(account);
+            Api.Accounts.UpdateAsync(account);
 
-            var updated = Api.Accounts.Find(account.Id);
+            var updated = Api.Accounts.FindAsync(account.Id);
 
             Assert.True(updated.Description == expectedDescription);
         }
@@ -30,13 +30,13 @@ namespace CoreTests.Integration.Accounts
         {
             var account = CreateAccount();
 
-            Api.Accounts.Update(new Account
+            Api.Accounts.UpdateAsync(new Account
             {
                 Id = account.Id,
                 Status = AccountStatus.Archived
             });
 
-            var updated = Api.Accounts.Find(account.Id);
+            var updated = Api.Accounts.FindAsync(account.Id);
 
             Assert.True(updated.Status == AccountStatus.Archived);
         }
@@ -45,7 +45,7 @@ namespace CoreTests.Integration.Accounts
         {
             var code = "1234" + Guid.NewGuid();
 
-            return Api.Accounts.Create(new Account
+            return Api.Accounts.CreateAsync(new Account
             {
                 Code = code.Substring(0, 10),
                 Name = "New Account " + Guid.NewGuid(),

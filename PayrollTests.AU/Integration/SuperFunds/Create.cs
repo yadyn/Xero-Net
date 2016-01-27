@@ -14,7 +14,7 @@ namespace PayrollTests.AU.Integration.SuperFunds
         [Test]
         public void create_superfund()
         {
-            var sf = Api.Create(new SuperFund
+            var sf = Api.CreateAsync(new SuperFund
             {
                 Type = SuperfundType.Regulated,
                 Abn = 78984178687,

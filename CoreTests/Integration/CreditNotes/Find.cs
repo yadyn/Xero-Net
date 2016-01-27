@@ -12,14 +12,14 @@ namespace CoreTests.Integration.CreditNotes
         {
             Given_a_creditnote();
 
-            Assert.True(Api.CreditNotes.Find().Any());
+            Assert.True(Api.CreditNotes.FindAsync().Any());
         }
 
         [Test]
         public void find_by_id()
         {
             var expected = Given_a_creditnote().Id;
-            var id = Api.CreditNotes.Find(expected).Id;
+            var id = Api.CreditNotes.FindAsync(expected).Id;
 
             Assert.AreEqual(expected, id);
         }
@@ -31,7 +31,7 @@ namespace CoreTests.Integration.CreditNotes
 
             var creditnote = Api.CreditNotes
                 .Where("Type == \"ACCPAYCREDIT\"")
-                .Find()
+                .FindAsync()
                 .First()
                 .Type;
 
@@ -45,7 +45,7 @@ namespace CoreTests.Integration.CreditNotes
 
             var creditNote = Api.CreditNotes
                 .OrderBy("Type")
-                .Find()
+                .FindAsync()
                 .First()
                 .Type;
 

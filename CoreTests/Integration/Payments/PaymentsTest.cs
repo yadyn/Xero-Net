@@ -10,7 +10,7 @@ namespace CoreTests.Integration.Payments
     {
         protected Payment Given_a_payment(decimal invoiceAmount, DateTime date, decimal amount, bool isReconciled = false)
         {
-            return Api.Create(CreatePayment(invoiceAmount, date, amount, isReconciled));
+            return Api.CreateAsync(CreatePayment(invoiceAmount, date, amount, isReconciled));
         }
 
         protected Payment CreatePayment(decimal invoiceAmount, DateTime date, decimal amount, bool isReconciled = false)
@@ -36,7 +36,7 @@ namespace CoreTests.Integration.Payments
 
         private Invoice Given_an_invoice(decimal amount = 100m, string accountCode = "100")
         {
-            return Api.Create(new Invoice
+            return Api.CreateAsync(new Invoice
             {
                 Contact = new Contact { Name = "Richard" },
                 Number = Random.GetRandomString(10),
@@ -59,7 +59,7 @@ namespace CoreTests.Integration.Payments
 
         protected CreditNote Given_an_credit_note(decimal amount = 100m, string accountCode = "100")
         {
-            return Api.Create(new CreditNote
+            return Api.CreateAsync(new CreditNote
             {
                 Contact = new Contact { Name = "Richard" },
                 Number = Random.GetRandomString(10),
@@ -82,7 +82,7 @@ namespace CoreTests.Integration.Payments
 
         protected BankTransaction Given_a_prepayment(string bankAccountCode, decimal amount = 100m, string accountCode = "100")
         {
-            return Api.Create(new BankTransaction
+            return Api.CreateAsync(new BankTransaction
             {
                 Contact = new Contact { Name = "Richard" },
                 Type = BankTransactionType.ReceivePrepayment,
@@ -105,7 +105,7 @@ namespace CoreTests.Integration.Payments
 
         protected BankTransaction Given_an_overpayment(string bankAccountCode, decimal amount = 100m, string accountCode = "100")
         {
-            return Api.Create(new BankTransaction
+            return Api.CreateAsync(new BankTransaction
             {
                 Contact = new Contact { Name = "Richard" },
                 Type = BankTransactionType.ReceiveOverpayment,
@@ -131,7 +131,7 @@ namespace CoreTests.Integration.Payments
         {
             var deleteThisPayment = new Payment { Status = PaymentStatus.Deleted, Id = payment.Id };
 
-            Api.Payments.Update(deleteThisPayment);
+            Api.Payments.UpdateAsync(deleteThisPayment);
         }
     }
 }

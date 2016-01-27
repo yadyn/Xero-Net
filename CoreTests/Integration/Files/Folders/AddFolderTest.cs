@@ -10,7 +10,7 @@ namespace CoreTests.Integration.Files.Folders
         [Test]
         public void can_create_a_folder_like_this()
         {
-            var result = Api.Folders.Add("Test Folder" + Guid.NewGuid());
+            var result = Api.Folders.AddAsync("Test Folder" + Guid.NewGuid());
         }
 
 
@@ -18,7 +18,7 @@ namespace CoreTests.Integration.Files.Folders
         public void can_get_all_folders_like_this()
         {
 
-            var allFolders = Api.Folders.Folders;
+            var allFolders = Api.Folders.GetFoldersAsync;
 
             Assert.True(allFolders[0].Name == "Inbox");
 
@@ -30,7 +30,7 @@ namespace CoreTests.Integration.Files.Folders
         public void can_remove_a_folder_like_this()
         {
 
-            var folder = Api.Folders.Add("Test Folder" + Guid.NewGuid());
+            var folder = Api.Folders.AddAsync("Test Folder" + Guid.NewGuid());
 
             Api.Folders.Remove(folder.Id); // Hint ->folder is empty
 

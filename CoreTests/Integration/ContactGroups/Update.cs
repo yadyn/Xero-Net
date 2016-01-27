@@ -17,7 +17,7 @@ namespace CoreTests.Integration.ContactGroups
 
             contactgroup.Name = newName;
             
-            var result =  Api.Update(contactgroup);
+            var result =  Api.UpdateAsync(contactgroup);
 
             Assert.IsTrue(result.Name.StartsWith("Marketing Group"));
         }

@@ -9,7 +9,7 @@ namespace CoreTests.Integration.ExpenseClaims
         [Test]
         public void create_expense_claim()
         {
-            var user = Api.Users.Find().First();
+            var user = Api.Users.FindAsync().First();
 
             var receipt1 = Given_a_receipt(user.Id, Random.GetRandomString(10), Random.GetRandomString(30), 20m, "420");
             var receipt2 = Given_a_receipt(user.Id, Random.GetRandomString(10), Random.GetRandomString(30), 50m, "420");

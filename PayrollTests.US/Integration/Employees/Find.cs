@@ -9,14 +9,14 @@ namespace PayrollTests.US.Integration.Employees
         [Test]
         public void find_all_employees()
         {
-            var emp = Api.Employees.Find();
+            var emp = Api.Employees.FindAsync();
             Assert.Greater(emp.Count(), 0);
         }
 
         [Test]
         public void find_by_page()
         {
-            var emp = Api.Employees.Page(1).Find();
+            var emp = Api.Employees.Page(1).FindAsync();
             Assert.Greater(emp.Count(), 0);
         }
 
@@ -24,7 +24,7 @@ namespace PayrollTests.US.Integration.Employees
         public void find_by_id()
         {
             var expected = Given_an_employee().Id;
-            var employee = Api.Employees.Find(expected);
+            var employee = Api.Employees.FindAsync(expected);
             Assert.AreEqual(expected, employee.Id);
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Xero.Api.Common;
 using Xero.Api.Infrastructure.Exceptions;
 using Xero.Api.Infrastructure.Interfaces;
@@ -62,46 +63,48 @@ namespace Xero.Api.Infrastructure.Http
             set { Client.UserAgent = value; }
         }
 
-        public IEnumerable<TResult> Get<TResult, TResponse>(string endPoint)
+        public Task<IEnumerable<TResult>> GetAsync<TResult, TResponse>(string endPoint)
             where TResponse : IXeroResponse<TResult>, new()
         {
             Client.ModifiedSince = ModifiedSince;
 
-            return Read<TResult, TResponse>(Client.Get(endPoint, new QueryGenerator(Where, Order, Parameters).UrlEncodedQueryString));
+            return ReadAsync<TResult, TResponse>(Client.GetAsync(endPoint, new QueryGenerator(Where, Order, Parameters).UrlEncodedQueryString));
         }
 
-        internal IEnumerable<TResult> Post<TResult, TResponse>(string endpoint, byte[] data, string mimeType)
+        internal Task<IEnumerable<TResult>> PostAsync<TResult, TResponse>(string endpoint, byte[] data, string mimeType)
             where TResponse : IXeroResponse<TResult>, new()
         {
-            return Read<TResult, TResponse>(Client.Post(endpoint, data, mimeType, new QueryGenerator(null, null, Parameters).UrlEncodedQueryString));
+            return ReadAsync<TResult, TResponse>(Client.PostAsync(endpoint, data, mimeType, new QueryGenerator(null, null, Parameters).UrlEncodedQueryString));
         }
 
-        public IEnumerable<TResult> Post<TResult, TResponse>(string endPoint, object data)
+        public Task<IEnumerable<TResult>> PostAsync<TResult, TResponse>(string endPoint, object data)
             where TResponse : IXeroResponse<TResult>, new()
         {
-            return Read<TResult, TResponse>(Client.Post(endPoint, XmlMapper.To(data), query: new QueryGenerator(null, null, Parameters).UrlEncodedQueryString));
+            return ReadAsync<TResult, TResponse>(Client.PostAsync(endPoint, XmlMapper.To(data), query: new QueryGenerator(null, null, Parameters).UrlEncodedQueryString));
         }
 
-        public IEnumerable<TResult> Put<TResult, TResponse>(string endPoint, object data)
+        public Task<IEnumerable<TResult>> PutAsync<TResult, TResponse>(string endPoint, object data)
             where TResponse : IXeroResponse<TResult>, new()
         {
-            return Read<TResult, TResponse>(Client.Put(endPoint, XmlMapper.To(data), query: new QueryGenerator(null, null, Parameters).UrlEncodedQueryString));
+            return ReadAsync<TResult, TResponse>(Client.PutAsync(endPoint, XmlMapper.To(data), query: new QueryGenerator(null, null, Parameters).UrlEncodedQueryString));
         }
 
-        public IEnumerable<TResult> Delete<TResult, TResponse>(string endPoint)
+        public Task<IEnumerable<TResult>> DeleteAsync<TResult, TResponse>(string endPoint)
             where TResponse : IXeroResponse<TResult>, new()
         {
-            return Read<TResult, TResponse>(Client.Delete(endPoint));
+            return ReadAsync<TResult, TResponse>(Client.DeleteAsync(endPoint));
         }
 
-        internal Response Get(string endpoint, string mimeType)
+        internal Task<Response> GetAsync(string endpoint, string mimeType)
         {
-            return Client.Get(endpoint, null);
+            return Client.GetAsync(endpoint, null);
         }
 
-        internal IEnumerable<TResult> Read<TResult, TResponse>(Response response)
+        internal async Task<IEnumerable<TResult>> ReadAsync<TResult, TResponse>(Task<Response> responseTask)
             where TResponse : IXeroResponse<TResult>, new()
         {
+            var response = await responseTask;
+
             // this is the 'happy path'
             if (response.StatusCode == HttpStatusCode.OK)
             {

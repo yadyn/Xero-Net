@@ -11,7 +11,7 @@ namespace CoreTests.Integration.ContactGroups
         {
             var contactGroup = Given_a_contactgroup();
 
-            var foundContactGroup = Api.ContactGroups.Find(contactGroup.Id);
+            var foundContactGroup = Api.ContactGroups.FindAsync(contactGroup.Id);
 
             Assert.IsTrue(foundContactGroup.Name.StartsWith("Nice People"));
         }
@@ -25,7 +25,7 @@ namespace CoreTests.Integration.ContactGroups
 
             Api.ContactGroups[contactGroup.Id].Add(contact);
 
-            var foundContactGroup = Api.ContactGroups.Find(contactGroup.Id);
+            var foundContactGroup = Api.ContactGroups.FindAsync(contactGroup.Id);
 
             Assert.IsTrue(foundContactGroup.Name.StartsWith("Nice People"));
             Assert.IsTrue(foundContactGroup.Contacts.FirstOrDefault().Name.StartsWith("Peter"));

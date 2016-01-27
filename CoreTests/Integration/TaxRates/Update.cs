@@ -26,7 +26,7 @@ namespace CoreTests.Integration.TaxRates
 
             var component = taxRate.TaxComponents.Single(p => p.Name == local);
             component.Rate = expected;
-            var updated = Api.Update(taxRate);
+            var updated = Api.UpdateAsync(taxRate);
 
             Assert.AreEqual(expected, updated.TaxComponents.Single(p => p.Name == local).Rate);
         }
@@ -44,7 +44,7 @@ namespace CoreTests.Integration.TaxRates
 
             var taxRate = Given_a_tax_rate(name, ReportTaxType.Input, state, stateRate, local, localRate);
             taxRate.Status = expected;
-            var updated = Api.TaxRates.Update(taxRate);
+            var updated = Api.TaxRates.UpdateAsync(taxRate);
 
             Assert.That(expected == updated.Status);
         }

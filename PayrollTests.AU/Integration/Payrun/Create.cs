@@ -12,7 +12,7 @@ namespace PayrollTests.AU.Integration.Payrun
         [Test]
         public void create_scheduled_payrun()
         {
-            var payrun = Api.Create(new PayRun
+            var payrun = Api.CreateAsync(new PayRun
             {
                 PayrollCalendarId = the_payroll_calendar_id()
             });
@@ -24,7 +24,7 @@ namespace PayrollTests.AU.Integration.Payrun
         [Test]
         public void create_unscheduled_payrun()
         {
-            var payrun = Api.Create(new PayRun
+            var payrun = Api.CreateAsync(new PayRun
             {
                 PayrollCalendarId = the_payroll_calendar_id(),
                 PayRunPeriodEndDate = DateTime.Today.AddDays(12)
@@ -37,7 +37,7 @@ namespace PayrollTests.AU.Integration.Payrun
         [Test]
         public void post_payrun()
         {
-            var payroll_calendar_id=Api.Create(new PayrollCalendar
+            var payroll_calendar_id=Api.CreateAsync(new PayrollCalendar
             {
                 Name = "Weekly Calendar",
                 CalendarType = CalendarType.Weekly,
@@ -45,7 +45,7 @@ namespace PayrollTests.AU.Integration.Payrun
                 PaymentDate = DateTime.Today.AddDays(7)
             }).Id;
 
-            var payrun = Api.Create(new PayRun
+            var payrun = Api.CreateAsync(new PayRun
             {
                 PayrollCalendarId = payroll_calendar_id,
                 PayRunPeriodEndDate = DateTime.Today.AddDays(13),

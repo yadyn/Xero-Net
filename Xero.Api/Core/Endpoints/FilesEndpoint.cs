@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
+using System.Threading.Tasks;
 using Xero.Api.Core.Endpoints.Base;
 using Xero.Api.Core.Request;
 using Xero.Api.Core.Response;
 using Xero.Api.Infrastructure.Http;
-using Xero.Api.Infrastructure.ThirdParty.ServiceStack.Text;
 
 namespace Xero.Api.Core.Endpoints
 {
@@ -21,71 +20,71 @@ namespace Xero.Api.Core.Endpoints
             
         }
         
-        public Model.File this[Guid id]
-        {
-            get
-            {
-                var result = Find(id);
-                return result; 
-            }
-        }
+        //public Model.File this[Guid id]
+        //{
+        //    get
+        //    {
+        //        var result = Find(id);
+        //        return result; 
+        //    }
+        //}
         
-        public IList<Model.File> Find()
+        public new async Task<IList<Model.File>> FindAsync()
         {
-            var response = HandleFilesResponse(Client
-                .Client.Get("files.xro/1.0/Files","" ));
+            var response = HandleFilesResponse(await Client
+                .Client.GetAsync("files.xro/1.0/Files","" ));
 
             return response.Items;
         }
 
-        public Model.File Find(Guid fileId)
+        public new async Task<Model.File> FindAsync(Guid fileId)
         {
-            var response = HandleFilesResponse(Client
-                .Client.Get("files.xro/1.0/Files", ""));
+            var response = HandleFilesResponse(await Client
+                .Client.GetAsync("files.xro/1.0/Files", ""));
 
             return response.Items.SingleOrDefault(i=>i.Id == fileId) ;
         }
 
-        public Model.File Rename(Guid id, string name)
+        public async Task<Model.File> RenameAsync(Guid id, string name)
         {
-            var response = HandleFileResponse(Client
-                .Client.Put("files.xro/1.0/Files/" + id, "{\"Name\":\"" + name + "\"}","application/json"));
+            var response = HandleFileResponse(await Client
+                .Client.PutAsync("files.xro/1.0/Files/" + id, "{\"Name\":\"" + name + "\"}","application/json"));
 
 
             return response;
         }
 
-        public Model.File Move(Guid id, Guid newFolder)
+        public async Task<Model.File> MoveAsync(Guid id, Guid newFolder)
         {
-            var response = HandleFileResponse(Client
-                .Client.Put("files.xro/1.0/Files/" + id, "{\"FolderId\":\"" + newFolder + "\"}", "application/json"));
+            var response = HandleFileResponse(await Client
+                .Client.PutAsync("files.xro/1.0/Files/" + id, "{\"FolderId\":\"" + newFolder + "\"}", "application/json"));
 
 
             return response;
         }
 
-        public Model.File Add(Guid folderId, Model.File file, byte[] data)
+        public async Task<Model.File> AddAsync(Guid folderId, Model.File file, byte[] data)
         {
            
-            var response = HandleFileResponse(Client
+            var response = HandleFileResponse(await Client
                 .Client
-                .PostMultipartForm("files.xro/1.0/Files/"+ folderId, file.Mimetype,  file.Name, file.FileName, data));
+                .PostMultipartFormAsync("files.xro/1.0/Files/"+ folderId, file.Mimetype,  file.Name, file.FileName, data));
 
             return response;
         }
 
-        public Model.File Remove(Guid fileid)
+        public async Task<Model.File> RemoveAsync(Guid fileid)
         {
-            var response = HandleFileResponse(Client
+            var response = HandleFileResponse(await Client
                 .Client
-                .Delete("files.xro/1.0/Files/"+fileid.ToString()));
+                .DeleteAsync("files.xro/1.0/Files/"+fileid.ToString()));
 
             return response;
         }
 
-        public byte[] GetContent(Guid id,string contentType)
+        public async Task<byte[]> GetContentAsync(Guid id, string contentType)
         {
-            var response = Client.Client.GetRaw("files.xro/1.0/Files/" + id + "/Content", contentType, "");
+            var response = await Client.Client.GetRawAsync("files.xro/1.0/Files/" + id + "/Content", contentType, "");
 
             using (MemoryStream ms = new MemoryStream())
             {

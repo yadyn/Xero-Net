@@ -19,14 +19,14 @@ namespace CoreTests.Integration.BankTransfers
                 Amount = amount
             };
             
-            return Api.Create(newBankTransfer);
+            return Api.CreateAsync(newBankTransfer);
         }
 
 
         public IList<Guid> get_bankaccount_ids()
         {
             return Api.Accounts.Where("Type == \"BANK\"")
-                .Find()
+                .FindAsync()
                 .Select(p => p.Id)
                 .ToList();
         }

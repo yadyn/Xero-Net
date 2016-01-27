@@ -13,7 +13,7 @@ namespace CoreTests.Integration.BankTransactions
             Assert.DoesNotThrow(() => Api.BankTransactions
                 .Where("Type == \"SPEND\"")
                 .And("Status == \"AUTHORISED\"")
-                .Find());
+                .FindAsync());
         }
 
         [Test]
@@ -23,7 +23,7 @@ namespace CoreTests.Integration.BankTransactions
 
             var bankTransaction = Api.BankTransactions
                 .ModifiedSince(DateTime.Today.AddDays(-1).Date)
-                .Find();
+                .FindAsync();
 
             Assert.IsNotNull(bankTransaction);
         }
@@ -33,7 +33,7 @@ namespace CoreTests.Integration.BankTransactions
         {
             var expected = Given_a_bank_transaction().Id;
 
-            var id = Api.BankTransactions.Find(expected).Id;
+            var id = Api.BankTransactions.FindAsync(expected).Id;
 
             Assert.AreEqual(expected, id);
         }
@@ -42,7 +42,7 @@ namespace CoreTests.Integration.BankTransactions
         public void find_by_page()
         {
             Given_a_bank_transaction();
-            var bankTrans = Api.BankTransactions.Page(1).Find();
+            var bankTrans = Api.BankTransactions.Page(1).FindAsync();
 
             Assert.Greater(bankTrans.Count(), 0);
         }

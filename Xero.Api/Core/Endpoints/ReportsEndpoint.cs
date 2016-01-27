@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Threading.Tasks;
 using Xero.Api.Common;
 using Xero.Api.Core.Model.Reports;
 using Xero.Api.Core.Model.Types;
@@ -17,24 +18,6 @@ namespace Xero.Api.Core.Endpoints
         {
         }
 
-        public Report GetPublishedReport(string id)
-        {
-            return Find(id);
-        }
-
-        public Report GetPublishedReport(Guid id)
-        {
-            return Find(id);
-        }
-
-        public IEnumerable<string> Published
-        {
-            get
-            {
-                return Find().Select(r => r.ReportID);
-            }
-        }
-
         public IEnumerable<string> Named
         {
             get
@@ -43,7 +26,22 @@ namespace Xero.Api.Core.Endpoints
             }
         }
 
-        public Report TenNinetyNine(DateTime? year)
+        public Task<Report> GetPublishedReportAsync(string id)
+        {
+            return FindAsync(id);
+        }
+
+        public Task<Report> GetPublishedReportAsync(Guid id)
+        {
+            return FindAsync(id);
+        }
+
+        public async Task<IEnumerable<string>> GetPublishedAsync()
+        {
+            return (await FindAsync()).Select(r => r.ReportID);
+        }
+
+        public Task<Report> GetTenNinetyNineAsync(DateTime? year)
         {
             var parameters = new NameValueCollection();
 
@@ -51,24 +49,24 @@ namespace Xero.Api.Core.Endpoints
 
            AddParameters(parameters);
 
-            return Find(NamedReportType.TenNinetyNine.ToString());
+            return FindAsync(NamedReportType.TenNinetyNine.ToString());
         }
 
-        public Report AgedPayables(Guid contact, DateTime? date = null, DateTime? from = null, DateTime? to = null)
+        public Task<Report> GetAgedPayablesAsync(Guid contact, DateTime? date = null, DateTime? from = null, DateTime? to = null)
         {
             GetAgedParameters(contact, date, from, to);
 
-            return Find(NamedReportType.AgedPayablesByContact.ToString());
+            return FindAsync(NamedReportType.AgedPayablesByContact.ToString());
         }
 
-        public Report AgedReceivables(Guid contact, DateTime? date = null, DateTime? from = null, DateTime? to = null)
+        public Task<Report> GetAgedReceivablesAsync(Guid contact, DateTime? date = null, DateTime? from = null, DateTime? to = null)
         {
             GetAgedParameters(contact, date, from, to);
 
-            return Find(NamedReportType.AgedReceivablesByContact.ToString());
+            return FindAsync(NamedReportType.AgedReceivablesByContact.ToString());
         }
 
-        public Report BalanceSheet(DateTime date, Guid? tracking1 = null, Guid? tracking2 = null,
+        public Task<Report> GetBalanceSheetAsync(DateTime date, Guid? tracking1 = null, Guid? tracking2 = null,
             bool standardLayout = false)
         {
             var parameters = new NameValueCollection();
@@ -80,10 +78,10 @@ namespace Xero.Api.Core.Endpoints
 
             AddParameters(parameters);
 
-            return Find(NamedReportType.BalanceSheet.ToString());
+            return FindAsync(NamedReportType.BalanceSheet.ToString());
         }
 
-        public Report BankStatement(Guid account, DateTime? from = null, DateTime? to = null)
+        public Task<Report> GetBankStatementAsync(Guid account, DateTime? from = null, DateTime? to = null)
         {
             var parameters = new NameValueCollection();
 
@@ -93,10 +91,10 @@ namespace Xero.Api.Core.Endpoints
 
             AddParameters(parameters);
 
-            return Find(NamedReportType.BankStatement.ToString());
+            return FindAsync(NamedReportType.BankStatement.ToString());
         }
 
-        public Report BankSummary(DateTime? from = null, DateTime? to = null)
+        public Task<Report> GetBankSummaryAsync(DateTime? from = null, DateTime? to = null)
         {
             var parameters = new NameValueCollection();
 
@@ -105,10 +103,10 @@ namespace Xero.Api.Core.Endpoints
 
             AddParameters(parameters);
 
-            return Find(NamedReportType.BankSummary.ToString());
+            return FindAsync(NamedReportType.BankSummary.ToString());
         }
 
-        public Report BudgetSummary(DateTime? date = null, int? periods = null, BudgetSummaryTimeframeType? timeFrame = null)
+        public Task<Report> GetBudgetSummaryAsync(DateTime? date = null, int? periods = null, BudgetSummaryTimeframeType? timeFrame = null)
         {
             var parameters = new NameValueCollection();
 
@@ -118,10 +116,10 @@ namespace Xero.Api.Core.Endpoints
 
             AddParameters(parameters);
 
-            return Find(NamedReportType.BudgetSummary.ToString());
+            return FindAsync(NamedReportType.BudgetSummary.ToString());
         }
 
-        public Report ExecutiveSummary(DateTime? date = null)
+        public Task<Report> GetExecutiveSummaryAsync(DateTime? date = null)
         {
             var parameters = new NameValueCollection();
 
@@ -129,10 +127,10 @@ namespace Xero.Api.Core.Endpoints
 
             AddParameters(parameters);
 
-            return Find(NamedReportType.ExecutiveSummary.ToString());
+            return FindAsync(NamedReportType.ExecutiveSummary.ToString());
         }
 
-        public Report ProfitAndLoss(DateTime? date, DateTime? from = null, DateTime? to = null,
+        public Task<Report> GetProfitAndLossAsync(DateTime? date, DateTime? from = null, DateTime? to = null,
             Guid? trackingCategory = null, Guid? trackingOption = null, Guid? trackingCategory2 = null, 
             Guid? trackingOption2 = null, bool? standardLayout = null)
         {
@@ -149,10 +147,10 @@ namespace Xero.Api.Core.Endpoints
 
             AddParameters(parameters);
 
-            return Find(NamedReportType.ProfitAndLoss.ToString());
+            return FindAsync(NamedReportType.ProfitAndLoss.ToString());
         }
 
-        public Report TrailBalance(DateTime? date = null, bool? paymentsOnly = null)
+        public Task<Report> GetTrailBalanceAsync(DateTime? date = null, bool? paymentsOnly = null)
         {
             var parameters = new NameValueCollection();
 
@@ -161,7 +159,7 @@ namespace Xero.Api.Core.Endpoints
 
             AddParameters(parameters);
 
-            return Find(NamedReportType.TrialBalance.ToString());
+            return FindAsync(NamedReportType.TrialBalance.ToString());
         }
 
         private void GetAgedParameters(Guid contact, DateTime? date, DateTime? from, DateTime? to)

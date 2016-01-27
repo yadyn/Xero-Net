@@ -21,7 +21,7 @@ namespace CoreTests.Integration.Contacts
         [Test]
         public void create_many_contact()
         {
-            var contacts = Api.Create(new List<Contact>
+            var contacts = Api.CreateAsync(new List<Contact>
             {
                 new Contact
                 {
@@ -52,7 +52,7 @@ namespace CoreTests.Integration.Contacts
             var expectedAccountNumber = "AccountNumber" + Random.GetRandomString(10);
 
 
-            var contact = Api.Create(new Contact
+            var contact = Api.CreateAsync(new Contact
             {
                 Name = "24 locks " + Random.GetRandomString(10),
                 FirstName = "Ben",
@@ -86,7 +86,7 @@ namespace CoreTests.Integration.Contacts
 
             var trackingCat = findOrCreateTC(TCName, OptionName);
 
-            var contact = Api.Create(new Contact
+            var contact = Api.CreateAsync(new Contact
             {
                 Name = "24 locks " + Random.GetRandomString(10),
                 FirstName = "Ben",

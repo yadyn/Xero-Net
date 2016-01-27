@@ -9,7 +9,7 @@ namespace PayrollTests.AU.Integration.Employees
         [Test]
         public void find_all_employees()
         {
-            var emp = Api.Employees.Find();
+            var emp = Api.Employees.FindAsync();
             Assert.Greater(emp.Count(), 0);
         }
 
@@ -17,7 +17,7 @@ namespace PayrollTests.AU.Integration.Employees
         public void find_by_id()
         {
             var expected = Given_an_employee().Id;
-            var employee = Api.Employees.Find(expected);
+            var employee = Api.Employees.FindAsync(expected);
 
             Assert.AreEqual(expected, employee.Id);
         }
@@ -29,7 +29,7 @@ namespace PayrollTests.AU.Integration.Employees
 
             Assert.True(Api.Employees
                 .Where("Status == \"TERMINATED\"")
-                .Find()
+                .FindAsync()
                 .Select(p => p.Id)
                 .Any(p => p == terminated.Id));            
         }
@@ -37,7 +37,7 @@ namespace PayrollTests.AU.Integration.Employees
         [Test]
         public void find_all_employees_paged()
         {
-            var emp = Api.Employees.Page(1).Find();
+            var emp = Api.Employees.Page(1).FindAsync();
             Assert.Greater(emp.Count(), 0);
         }
     }

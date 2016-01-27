@@ -25,7 +25,7 @@ namespace CoreTests.Integration.Payments
 
             Given_this_payment_is_deleted(payment);
 
-            var found = Api.Payments.Find(payment.Id);
+            var found = Api.Payments.FindAsync(payment.Id);
 
             Assert.True(found.Status == PaymentStatus.Deleted);
         }

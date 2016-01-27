@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Threading.Tasks;
 using Xero.Api.Core.Endpoints.Base;
 using Xero.Api.Core.Model;
 using Xero.Api.Core.Request;
@@ -17,13 +18,13 @@ namespace Xero.Api.Core.Endpoints
             Page(1);
         }
 
-        public void Delete(LinkedTransaction linkedTransaction)
+        public async Task DeleteAsync(LinkedTransaction linkedTransaction)
         {
             var endpoint = string.Format("/api.xro/2.0/LinkedTransactions/{0}", linkedTransaction.Id);
 
-            HandleResponse(Client
+            HandleResponse(await Client
                 .Client
-                .Delete(endpoint));
+                .DeleteAsync(endpoint));
         }
 
         public LinkedTransactionsEndpoint Page(int page)

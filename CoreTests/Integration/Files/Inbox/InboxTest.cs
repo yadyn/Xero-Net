@@ -13,7 +13,7 @@ namespace CoreTests.Integration.Files.Inbox
         [Test]
         public void can_get_the_inbox_like_this()
         {
-            var inbox = Api.Inbox.InboxFolder;
+            var inbox = Api.Inbox.GetInboxFolderAsync;
 
             Assert.IsTrue(inbox.Name == "Inbox");
 
@@ -25,7 +25,7 @@ namespace CoreTests.Integration.Files.Inbox
         {
             var filename = "Inbox file " + Guid.NewGuid() + ".png";
 
-            var result = Api.Inbox.Add(create_file_with_name(filename), exampleFile);
+            var result = Api.Inbox.AddAsync(create_file_with_name(filename), exampleFile);
 
             var file = Api.Files[result.Id];
 
@@ -37,11 +37,11 @@ namespace CoreTests.Integration.Files.Inbox
         [Test]
         public void can_remove_a_file_like_this()
         {
-            var inboxId = Api.Inbox.InboxFolder.Id;
+            var inboxId = Api.Inbox.GetInboxFolderAsync.Id;
 
             var result = Given_a_file_in(inboxId, "Test " + Guid.NewGuid() + ".png");
 
-            Api.Inbox.Remove(result);
+            Api.Inbox.RemoveAsync(result);
 
             var notfound = Api.Inbox[result];
 

@@ -10,7 +10,7 @@ namespace PayrollTests.AU.Integration.Payrun
 
         public PayRun Given_a_payrun()
         {
-            var payrun = Api.Create(new PayRun
+            var payrun = Api.CreateAsync(new PayRun
             {
                 PayrollCalendarId = the_payroll_calendar_id(),
             });
@@ -22,14 +22,14 @@ namespace PayrollTests.AU.Integration.Payrun
 
         public Guid the_payroll_calendar_id()
         {
-            var pc = Api.PayrollCalendars.Find();
+            var pc = Api.PayrollCalendars.FindAsync();
             if (pc.FirstOrDefault().Id != Guid.Empty)
             {
                 return pc.FirstOrDefault().Id;
             }
             else
             {
-                return Api.Create(new PayrollCalendar
+                return Api.CreateAsync(new PayrollCalendar
                 {
                     Name = "New Calendar",
                     CalendarType = CalendarType.Weekly,

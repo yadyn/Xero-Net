@@ -11,7 +11,7 @@ namespace PayrollTests.US.Integration.PaySchedules
         [Test]
         public void create_payschedule()
         {
-            Assert.DoesNotThrow(() => Api.Create(new PaySchedule
+            Assert.DoesNotThrow(() => Api.CreateAsync(new PaySchedule
             {
                 Name = "New Schedule",
                 ScheduleType = ScheduleType.Weekly,

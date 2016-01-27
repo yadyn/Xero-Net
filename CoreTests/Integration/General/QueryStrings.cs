@@ -9,7 +9,7 @@ namespace CoreTests.Integration.General
         [Test]
         public void query_string_is_as_expected()
         {
-            Assert.DoesNotThrow(() => Api.Invoices.Where("Status == \"ACTIVE\"").Find());            
+            Assert.DoesNotThrow(() => Api.Invoices.Where("Status == \"ACTIVE\"").FindAsync());            
         }
 
         [Test]
@@ -21,13 +21,13 @@ namespace CoreTests.Integration.General
             Assert.DoesNotThrow(() => Api.Invoices.Where("Status == \"ACTIVE\"")
                 .And(string.Format("DueDate >= DateTime.Parse(\"{0}\")", startDate))
                 .And(string.Format("DueDate <= DateTime.Parse(\"{0}\")", endDate))
-                .OrderByDescending("DueDate").Find());
+                .OrderByDescending("DueDate").FindAsync());
         }
 
         [Test]
         public void contact_query_string_is_as_expected()
         {
-            Assert.DoesNotThrow(() => Api.Contacts.IncludeArchived(true).Find());
+            Assert.DoesNotThrow(() => Api.Contacts.IncludeArchived(true).FindAsync());
         }
     }
 }

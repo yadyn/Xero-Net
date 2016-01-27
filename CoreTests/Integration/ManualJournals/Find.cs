@@ -19,7 +19,7 @@ namespace CoreTests.Integration.ManualJournals
             const string expected = "We know what we want to do";
             var manual = Given_a_manual_journal(expected, 50);
 
-            var found = Api.ManualJournals.Find(manual.Id);
+            var found = Api.ManualJournals.FindAsync(manual.Id);
 
             Assert.AreEqual(DateTime.Now.Date, found.Date);
             Assert.AreEqual(expected, found.Narration);
@@ -34,7 +34,7 @@ namespace CoreTests.Integration.ManualJournals
 
             var found = Api.ManualJournals
                 .Where(string.Format("Narration == \"{0}\"", expected))
-                .Find();
+                .FindAsync();
 
             Assert.True(found.All(p => p.Narration == expected));
         }
@@ -46,7 +46,7 @@ namespace CoreTests.Integration.ManualJournals
 
             Given_a_manual_journal(expected, 50);
 
-            var manualJournals = Api.ManualJournals.Page(1).Find();
+            var manualJournals = Api.ManualJournals.Page(1).FindAsync();
 
             Assert.Greater(manualJournals.Count(), 0);
         }

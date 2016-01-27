@@ -13,7 +13,7 @@ namespace PayrollTests.AU.Integration.LeaveApplications
         [Test]
         public void create_leave_application()
         {
-            var la = Api.Create(new LeaveApplication
+            var la = Api.CreateAsync(new LeaveApplication
             {
                 EmployeeId = Given_an_employee().Id,
                 LeaveTypeId = the_leavetype_id(),

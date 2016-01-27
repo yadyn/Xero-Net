@@ -13,7 +13,7 @@ namespace PayrollTests.AU.Integration.TimeSheets
 
         public Timesheet Given_a_timesheet()
         {
-            return Api.Create(new Timesheet
+            return Api.CreateAsync(new Timesheet
             {
                 EmployeeId = the_employee_id(),
                 StartDate = timesheet_start_date(),
@@ -27,7 +27,7 @@ namespace PayrollTests.AU.Integration.TimeSheets
 
         public Guid the_employee_id()
         {
-            var emp = Api.Create(new Employee
+            var emp = Api.CreateAsync(new Employee
             {
                 FirstName = "Jack",
                 LastName = "Gray",
@@ -41,14 +41,14 @@ namespace PayrollTests.AU.Integration.TimeSheets
 
         public Guid employee_payroll_calendar_id()
         {
-            var payruns = Api.PayRuns.Where("PayRunStatus == \"DRAFT\"").Find();
+            var payruns = Api.PayRuns.Where("PayRunStatus == \"DRAFT\"").FindAsync();
             if (payruns.Any())
             {
                 return payruns.FirstOrDefault().PayrollCalendarId;
             }
             else
             {
-                var payroll_calendar_id = Api.Create(new PayrollCalendar
+                var payroll_calendar_id = Api.CreateAsync(new PayrollCalendar
                 {
                     Name = "New Calendar",
                     CalendarType = CalendarType.Weekly,
@@ -56,7 +56,7 @@ namespace PayrollTests.AU.Integration.TimeSheets
                     PaymentDate = DateTime.Today.AddDays(14)
                 }).Id;
 
-                Api.Create(new PayRun
+                Api.CreateAsync(new PayRun
                   {
                       PayrollCalendarId = payroll_calendar_id
                   });
@@ -68,7 +68,7 @@ namespace PayrollTests.AU.Integration.TimeSheets
 
         public Guid earning_rates_id()
         {
-            var er = Api.PayItems.Find();
+            var er = Api.PayItems.FindAsync();
             return er.FirstOrDefault().EarningsRates.FirstOrDefault().Id;
         }
 
@@ -76,7 +76,7 @@ namespace PayrollTests.AU.Integration.TimeSheets
 
         public DateTime timesheet_start_date()
         {
-            return Api.PayrollCalendars.Find(employee_payroll_calendar_id()).StartDate.GetValueOrDefault();
+            return Api.PayrollCalendars.FindAsync(employee_payroll_calendar_id()).StartDate.GetValueOrDefault();
         }
 
 

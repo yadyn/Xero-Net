@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Xero.Api.Core.Endpoints.Base;
 using Xero.Api.Core.Model;
 using Xero.Api.Core.Request;
@@ -16,13 +17,13 @@ namespace Xero.Api.Core.Endpoints
         {
         }
 
-        public void Delete(Item itemToDelete)
+        public async Task DeleteAsync(Item itemToDelete)
         {
             var endpoint = string.Format("/api.xro/2.0/Items/{0}", itemToDelete.Id);
 
-            HandleResponse(Client
+            HandleResponse(await Client
                 .Client
-                .Delete(endpoint));
+                .DeleteAsync(endpoint));
         }
 
         private ItemsResponse HandleResponse(Infrastructure.Http.Response response)

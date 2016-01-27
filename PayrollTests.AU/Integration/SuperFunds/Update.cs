@@ -11,7 +11,7 @@ namespace PayrollTests.AU.Integration.SuperFunds
         [Test]
         public void update_superfund()
         {
-            var sf = Api.Create(new SuperFund
+            var sf = Api.CreateAsync(new SuperFund
             {
                 Type = SuperfundType.SelfManaged,
                 Abn = 11001032511,
@@ -22,7 +22,7 @@ namespace PayrollTests.AU.Integration.SuperFunds
             });
 
 
-            var updated_superfund = Api.Update(new SuperFund
+            var updated_superfund = Api.UpdateAsync(new SuperFund
             {
                 Id = sf.Id,
                 Type = SuperfundType.SelfManaged,

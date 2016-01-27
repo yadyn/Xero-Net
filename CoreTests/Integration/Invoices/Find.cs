@@ -12,7 +12,7 @@ namespace CoreTests.Integration.Invoices
         public void find_by_page()
         {
             Given_an_invoice();
-            var invoices = Api.Invoices.Page(1).Find();
+            var invoices = Api.Invoices.Page(1).FindAsync();
             
             Assert.Greater(invoices.Count(), 0);
         }
@@ -21,7 +21,7 @@ namespace CoreTests.Integration.Invoices
         public void find_by_id()
         {
             var expected  = Given_an_invoice().Id;
-            var id = Api.Invoices.Find(expected).Id;
+            var id = Api.Invoices.FindAsync(expected).Id;
 
             Assert.AreEqual(expected, id);
         }
@@ -32,7 +32,7 @@ namespace CoreTests.Integration.Invoices
             Given_an_invoice();
             var invoices = Api.Invoices
                 .Where("Type == \"ACCREC\"")
-                .Find()
+                .FindAsync()
                 .ToList();
 
             Assert.True(invoices.Any());
@@ -48,7 +48,7 @@ namespace CoreTests.Integration.Invoices
 
             var invoices = Api.Invoices
                 .Where(string.Format("DueDate > DateTime({0},{1},{2})", today.Year, today.Month, today.Day ))
-                .Find()
+                .FindAsync()
                 .ToList();
 
             Assert.True(invoices.Any());           
@@ -57,7 +57,7 @@ namespace CoreTests.Integration.Invoices
         [Test]
         public void order_by_type()
         {
-            var invoices = Api.Invoices.OrderByDescending("Type").Find();
+            var invoices = Api.Invoices.OrderByDescending("Type").FindAsync();
 
             Assert.AreEqual(InvoiceType.AccountsReceivable, invoices.First().Type);
         }

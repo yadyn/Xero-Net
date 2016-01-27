@@ -17,7 +17,7 @@ namespace CoreTests.Integration.Payments
         {
             var expected = Given_a_payment(200, DateTime.Today.AddDays(-10), 150);
 
-            var found = Api.Payments.Find(expected.Id);
+            var found = Api.Payments.FindAsync(expected.Id);
 
             Assert.AreEqual(expected.Id, found.Id);
             Assert.AreEqual(expected.Amount, found.Amount);
@@ -34,7 +34,7 @@ namespace CoreTests.Integration.Payments
             var found = Api.Payments
                 .ModifiedSince(DateTime.Now.AddSeconds(-1))
                 .Where("Amount == 150")
-                .Find()
+                .FindAsync()
                 .ToList();
 
             Assert.IsTrue(found.Count() >= 2);

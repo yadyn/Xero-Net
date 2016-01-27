@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Threading.Tasks;
 using Xero.Api.Core.Model.Setup;
 using Xero.Api.Core.Response;
 using Xero.Api.Infrastructure.Http;
@@ -21,22 +22,24 @@ namespace Xero.Api.Core.Endpoints
             _apiEndpointUrl = apiEndpointUrl;
         }
 
-        public ImportSummary Update(Setup setup)
+        public Task<ImportSummary> UpdateAsync(Setup setup)
         {
-            return HandleResponse(_client
+            return HandleResponseAsync(_client
                 .Client
-                .Post(_apiEndpointUrl, _client.XmlMapper.To(setup)));
+                .PostAsync(_apiEndpointUrl, _client.XmlMapper.To(setup)));
         }
 
-        public ImportSummary Create(Setup setup)
+        public Task<ImportSummary> CreateAsync(Setup setup)
         {
-            return HandleResponse(_client
+            return HandleResponseAsync(_client
                 .Client
-                .Put(_apiEndpointUrl, _client.XmlMapper.To(setup)));
+                .PutAsync(_apiEndpointUrl, _client.XmlMapper.To(setup)));
         }
 
-        private ImportSummary HandleResponse(Infrastructure.Http.Response response)
+        private async Task<ImportSummary> HandleResponseAsync(Task<Infrastructure.Http.Response> responseTask)
         {
+            var response = await responseTask;
+
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 return _client.JsonMapper.From<SetupResponse>(response.Body).ImportSummary;                

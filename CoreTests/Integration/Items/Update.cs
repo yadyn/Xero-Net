@@ -14,12 +14,12 @@ namespace CoreTests.Integration.Items
         public void update_an_item()
         {
             var code = "Woo-hoo " + Random.GetRandomString(10);
-            var the_item = Api.Create(new Item
+            var the_item = Api.CreateAsync(new Item
             {
                 Code = code
             });
 
-            var updated_item = Api.Update(new Item
+            var updated_item = Api.UpdateAsync(new Item
             {
                 Id = the_item.Id,
                 Code = code,

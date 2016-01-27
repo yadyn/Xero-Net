@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Threading.Tasks;
 using Xero.Api.Infrastructure.Http;
 using Xero.Api.Infrastructure.Interfaces;
 
@@ -69,19 +70,19 @@ namespace Xero.Api.Common
             return (T)this;
         }
 
-        public IEnumerable<TResult> Find()
+        public Task<IEnumerable<TResult>> FindAsync()
         {
-            return Get(ApiEndpointUrl, null);
+            return GetAsync(ApiEndpointUrl, null);
         }
 
-        public TResult Find(Guid child)
+        public Task<TResult> FindAsync(Guid child)
         {
-            return Find(child.ToString("D"));
+            return FindAsync(child.ToString("D"));
         }
 
-        public TResult Find(string child)
+        public async Task<TResult> FindAsync(string child)
         {
-            return Get(ApiEndpointUrl, "/" + child).FirstOrDefault();
+            return (await GetAsync(ApiEndpointUrl, "/" + child)).FirstOrDefault();
         }
 
         public virtual void ClearQueryString()
@@ -158,7 +159,7 @@ namespace Xero.Api.Common
             return (T)this;
         }
 
-        private IEnumerable<TResult> Get(string endpoint, string child)
+        private Task<IEnumerable<TResult>> GetAsync(string endpoint, string child)
         {
             try
             {
@@ -172,7 +173,7 @@ namespace Xero.Api.Common
                 Client.ModifiedSince = _modifiedSince;
                 Client.Parameters = Parameters;
 
-                return Client.Get<TResult, TResponse>(endpoint + (child ?? string.Empty));
+                return Client.GetAsync<TResult, TResponse>(endpoint + (child ?? string.Empty));
             }
             finally
             {

@@ -11,7 +11,7 @@ namespace PayrollTests.US.Integration.PaySchedules
         public void find_all()
         {
             Given_a_payschedule();
-            var ps = Api.PaySchedules.Find();
+            var ps = Api.PaySchedules.FindAsync();
             Assert.IsTrue(ps.FirstOrDefault().Id != Guid.Empty);
         }
 
@@ -19,7 +19,7 @@ namespace PayrollTests.US.Integration.PaySchedules
         public void find_by_page()
         {
             Given_a_payschedule();
-            var ps = Api.PaySchedules.Page(1).Find();
+            var ps = Api.PaySchedules.Page(1).FindAsync();
             Assert.IsTrue(ps.FirstOrDefault().Id != Guid.Empty);
         }
 
@@ -27,7 +27,7 @@ namespace PayrollTests.US.Integration.PaySchedules
         public void find_by_id()
         {
             var ps_id = Given_a_payschedule().Id;
-            var ps = Api.PaySchedules.Find(ps_id);
+            var ps = Api.PaySchedules.FindAsync(ps_id);
             Assert.AreEqual(ps_id, ps.Id);
         }
     }

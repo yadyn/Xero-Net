@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Xero.Api.Infrastructure.Interfaces;
 using Xero.Api.Infrastructure.OAuth.Signing;
 
@@ -28,14 +29,14 @@ namespace Xero.Api.Example.Applications.Public
             return new HmacSha1Signer().CreateSignature(token, uri, verb, verifier, callback);
         }
 
-        protected override IToken RenewToken(IToken sessionToken, IConsumer consumer)
+        protected override Task<IToken> RenewTokenAsync(IToken sessionToken, IConsumer consumer)
         {
             throw new RenewTokenException();
         }
 
-        public string GetRequestTokenAuthorizeUrl(string userId)
+        public async Task<string> GetRequestTokenAuthorizeUrlAsync(string userId)
         {
-            var requestToken = GetRequestToken(_consumer);
+            var requestToken = await GetRequestTokenAsync(_consumer);
             requestToken.UserId = userId;
 
             var existingToken = _requestTokenStore.Find(userId);
@@ -47,7 +48,7 @@ namespace Xero.Api.Example.Applications.Public
             return GetAuthorizeUrl(requestToken);
         }
 
-        public IToken RetrieveAndStoreAccessToken(string userId, string tokenKey, string verfier, string organisationShortCode)
+        public async Task<IToken> RetrieveAndStoreAccessTokenAsync(string userId, string tokenKey, string verfier, string organisationShortCode)
         {
             var existingAccessToken = Store.Find(userId);
             if (existingAccessToken != null)
@@ -57,13 +58,13 @@ namespace Xero.Api.Example.Applications.Public
             if (requestToken == null)
                 throw new ApplicationException("Failed to look up request token for user");
 
-			//Delete the request token from the _requestTokenStore as the next few lines will render it useless for the future.
+            //Delete the request token from the _requestTokenStore as the next few lines will render it useless for the future.
             _requestTokenStore.Delete(requestToken);
 
             if (requestToken.TokenKey != tokenKey)
                 throw new ApplicationException("Request token key does not match");
 
-            var accessToken = Tokens.GetAccessToken(requestToken,
+            var accessToken = await Tokens.GetAccessTokenAsync(requestToken,
                 GetAuthorization(requestToken, "POST", Tokens.AccessUri, null, verfier));
 
             accessToken.UserId = userId;

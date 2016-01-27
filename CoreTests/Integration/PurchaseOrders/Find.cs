@@ -16,7 +16,7 @@ namespace CoreTests.Integration.PurchaseOrders
         {
             var purchaseOrder = Given_a_minimum_PurchaseOrder();
 
-            var foundPurchaseOrder = Api.PurchaseOrders.Find(purchaseOrder.Id);
+            var foundPurchaseOrder = Api.PurchaseOrders.FindAsync(purchaseOrder.Id);
 
             Assert.AreEqual(purchaseOrder.Id, foundPurchaseOrder.Id);
         }
@@ -26,7 +26,7 @@ namespace CoreTests.Integration.PurchaseOrders
         {
             Given_a_minimum_PurchaseOrder();
 
-            var foundPurchaseOrders = Api.PurchaseOrders.Find();
+            var foundPurchaseOrders = Api.PurchaseOrders.FindAsync();
 
             Assert.GreaterOrEqual(foundPurchaseOrders.Count(), 1);
         }
@@ -36,7 +36,7 @@ namespace CoreTests.Integration.PurchaseOrders
         {
             Given_a_minimum_PurchaseOrder();
 
-            var foundPurchaseOrders = Api.PurchaseOrders.Page(1).Find();
+            var foundPurchaseOrders = Api.PurchaseOrders.Page(1).FindAsync();
 
             Assert.GreaterOrEqual(foundPurchaseOrders.Count(), 1);
         }
@@ -46,7 +46,7 @@ namespace CoreTests.Integration.PurchaseOrders
         {
             Given_an_authorised_PurchaseOrder();
 
-            var authorisedPurchaseOrders = Api.PurchaseOrders.Status(PurchaseOrderStatus.Authorised).Find();
+            var authorisedPurchaseOrders = Api.PurchaseOrders.Status(PurchaseOrderStatus.Authorised).FindAsync();
 
             Assert.IsTrue(authorisedPurchaseOrders.All(p => p.Status == PurchaseOrderStatus.Authorised), "Expected all retrieved purchase orders to have status of Authorised");
         }
@@ -64,7 +64,7 @@ namespace CoreTests.Integration.PurchaseOrders
 
             var newPurchaseOrder = Given_a_minimum_PurchaseOrder();
 
-            var retrievedPurchaseOrders = Api.PurchaseOrders.ModifiedSince(date).Find().ToList();
+            var retrievedPurchaseOrders = Api.PurchaseOrders.ModifiedSince(date).FindAsync().ToList();
 
             Assert.True(retrievedPurchaseOrders.All(p => p.Id != oldPurchaseOrder.Id));
             Assert.True(retrievedPurchaseOrders.Any(p => p.Id == newPurchaseOrder.Id));
@@ -79,7 +79,7 @@ namespace CoreTests.Integration.PurchaseOrders
 
             var inbetweenDate = DateTime.Today.AddDays(-3);
             
-            var retrievedPurchaseOrders = Api.PurchaseOrders.DateFrom(inbetweenDate).Find().ToList();
+            var retrievedPurchaseOrders = Api.PurchaseOrders.DateFrom(inbetweenDate).FindAsync().ToList();
 
             Assert.True(retrievedPurchaseOrders.All(p => p.Id != oldPurchaseOrder.Id));
             Assert.True(retrievedPurchaseOrders.Any(p => p.Id == newPurchaseOrder.Id));
@@ -94,7 +94,7 @@ namespace CoreTests.Integration.PurchaseOrders
 
             var inbetweenDate = DateTime.Today.AddDays(-3);
 
-            var retrievedPurchaseOrders = Api.PurchaseOrders.DateTo(inbetweenDate).Find().ToList();
+            var retrievedPurchaseOrders = Api.PurchaseOrders.DateTo(inbetweenDate).FindAsync().ToList();
 
             Assert.True(retrievedPurchaseOrders.All(p => p.Id != newPurchaseOrder.Id));
             Assert.True(retrievedPurchaseOrders.Any(p => p.Id == oldPurchaseOrder.Id));
@@ -115,7 +115,7 @@ namespace CoreTests.Integration.PurchaseOrders
             var retrievedPurchaseOrders = Api.PurchaseOrders
                 .DateFrom(dateFrom)
                 .DateTo(dateTo)
-                .Find().ToList();
+                .FindAsync().ToList();
 
             Assert.True(retrievedPurchaseOrders.All(p => p.Id != newPurchaseOrder.Id));
             Assert.True(retrievedPurchaseOrders.All(p => p.Id != oldPurchaseOrder.Id));
@@ -132,28 +132,28 @@ namespace CoreTests.Integration.PurchaseOrders
                 .DateTo(DateTime.Today.AddDays(-1))
                 .Status(PurchaseOrderStatus.Authorised)
                 .Page(1)
-                .Find();
+                .FindAsync();
 
             Assert.GreaterOrEqual(purchaseOrders.Count(), 1);
         }
 
         private PurchaseOrder Given_a_minimum_PurchaseOrder(DateTime? date = null)
         {
-            var purchaseOrder = Api.PurchaseOrders.Create(new PurchaseOrder
+            var purchaseOrder = Api.PurchaseOrders.CreateAsync(new PurchaseOrder
             {
                 Date = date ?? DateTime.Today,
-                Contact = Api.Contacts.Find().First()
+                Contact = Api.Contacts.FindAsync().First()
             });
             return purchaseOrder;
         }
 
         private PurchaseOrder Given_an_authorised_PurchaseOrder()
         {
-            var purchaseOrder = Api.PurchaseOrders.Create(new PurchaseOrder
+            var purchaseOrder = Api.PurchaseOrders.CreateAsync(new PurchaseOrder
             {
                 Status = PurchaseOrderStatus.Authorised,
                 Date = DateTime.Today,
-                Contact = Api.Contacts.Find().First(),
+                Contact = Api.Contacts.FindAsync().First(),
                 LineItems = new List<LineItem>()
                 {
                     new LineItem

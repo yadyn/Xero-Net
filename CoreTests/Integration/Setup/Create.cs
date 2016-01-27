@@ -12,7 +12,7 @@ namespace CoreTests.Integration.Setup
         [Test]
         public void create_a_valid_setup()
         {
-            var import = Api.Setup.Create(new Xero.Api.Core.Model.Setup.Setup
+            var import = Api.Setup.CreateAsync(new Xero.Api.Core.Model.Setup.Setup
             {
                 Accounts = new List<Account>(new[] {
                     new Account
@@ -31,7 +31,7 @@ namespace CoreTests.Integration.Setup
         [Test]
         public void missing_account_code_will_error()
         {
-            Assert.Throws<ValidationException>(() => Api.Setup.Create(new Xero.Api.Core.Model.Setup.Setup
+            Assert.Throws<ValidationException>(() => Api.Setup.CreateAsync(new Xero.Api.Core.Model.Setup.Setup
             {
                 Accounts = new List<Account>(new[]
                 {
@@ -47,7 +47,7 @@ namespace CoreTests.Integration.Setup
         [Test]
         public void providing_nothing_is_not_an_error()
         {
-            var import = Api.Setup.Create(new Xero.Api.Core.Model.Setup.Setup());
+            var import = Api.Setup.CreateAsync(new Xero.Api.Core.Model.Setup.Setup());
 
             Assert.False(import.Accounts.Present);
             Assert.False(import.Organisation.Present);

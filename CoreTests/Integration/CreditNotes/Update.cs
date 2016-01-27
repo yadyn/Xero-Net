@@ -16,7 +16,7 @@ namespace CoreTests.Integration.CreditNotes
 
             creditnote.Status = expected;
 
-            var status = Api.Update(creditnote).Status;
+            var status = Api.UpdateAsync(creditnote).Status;
 
             Assert.AreEqual(expected, status);
         }
@@ -26,7 +26,7 @@ namespace CoreTests.Integration.CreditNotes
         {
             var creditnote = Given_a_creditnote();
 
-            var updatedCreditnote = Api.Update(new CreditNote
+            var updatedCreditnote = Api.UpdateAsync(new CreditNote
             {
                 Id = creditnote.Id,
                 LineItems = new List<LineItem>

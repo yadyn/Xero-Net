@@ -11,20 +11,19 @@ namespace CoreTests.Integration.Accounts
         [Test]
         public void create_account()
         {
-            Assert.DoesNotThrow(() => Api.Create(new Account
+            Assert.DoesNotThrow(async () => await Api.CreateAsync(new Account
             {
               Code = Random.GetRandomString(10),
               Type = AccountType.Overheads,
               Description = "Consultant charges",
               Name = "Consultation " + Random.GetRandomString(10)
             }));
-
         }
 
         [Test]
         public void create_bank_account()
         {
-            Assert.DoesNotThrow(() => Api.Create(new Account
+            Assert.DoesNotThrow(async () => await Api.CreateAsync(new Account
             {
                 Code = Random.GetRandomString(10),
                 Name = "Cheque " + Random.GetRandomString(10),
@@ -36,7 +35,7 @@ namespace CoreTests.Integration.Accounts
         [Test]
         public void incorrect_types_are_rejected()
         {
-            Assert.Throws<ValidationException>(() => Api.Create(new Account
+            Assert.Throws<ValidationException>(async () => await Api.CreateAsync(new Account
             {
                 Code = Random.GetRandomString(10),
                 Type = AccountType.Expense,

@@ -11,7 +11,7 @@ namespace PayrollTests.AU.Integration.Employees
         [Test]
         public void create_employee()
         {
-            var emp = Api.Create(new Employee
+            var emp = Api.CreateAsync(new Employee
             {
                 FirstName = "John",
                 MiddleNames = "James",
@@ -53,7 +53,7 @@ namespace PayrollTests.AU.Integration.Employees
         [Test]
         public void create_employee_with_taxdeclarations()
         {
-            var emp = Api.Create(new Employee
+            var emp = Api.CreateAsync(new Employee
             {
                 FirstName = "John",
                 MiddleNames = "James",
@@ -76,7 +76,7 @@ namespace PayrollTests.AU.Integration.Employees
         [Test]
         public void create_employee_with_opening_balances()
         {
-            Assert.DoesNotThrow(() => Api.Create(new Employee
+            Assert.DoesNotThrow(() => Api.CreateAsync(new Employee
             {
                 FirstName = "John",
                 MiddleNames = "James",

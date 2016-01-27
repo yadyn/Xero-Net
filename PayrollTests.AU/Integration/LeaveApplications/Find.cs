@@ -13,7 +13,7 @@ namespace PayrollTests.AU.Integration.LeaveApplications
         public void find_all()
         {
             Given_a_leave_application();
-            var la = Api.LeaveApplications.Find();
+            var la = Api.LeaveApplications.FindAsync();
             Assert.IsTrue(la.FirstOrDefault().Id != Guid.Empty);
         }
 
@@ -22,7 +22,7 @@ namespace PayrollTests.AU.Integration.LeaveApplications
         public void find_by_id()
         {
             var the_la_id = Given_a_leave_application().Id;
-            var la = Api.LeaveApplications.Find(the_la_id);
+            var la = Api.LeaveApplications.FindAsync(the_la_id);
             Assert.AreEqual(the_la_id, la.Id);
         }
 
@@ -33,7 +33,7 @@ namespace PayrollTests.AU.Integration.LeaveApplications
             var the_la = Given_a_leave_application();
             var start_date = DateTime.Today;
             var la = Api.LeaveApplications
-                .Where(string.Format("StartDate <= DateTime.Parse(\"{0}\")", start_date.ToString("yyyy-MM-dd"))).Find();
+                .Where(string.Format("StartDate <= DateTime.Parse(\"{0}\")", start_date.ToString("yyyy-MM-dd"))).FindAsync();
             Assert.IsEmpty(la);
 
         }
@@ -42,7 +42,7 @@ namespace PayrollTests.AU.Integration.LeaveApplications
         public void find_paged()
         {
             Given_a_leave_application();
-            var la = Api.LeaveApplications.Page(1).Find();
+            var la = Api.LeaveApplications.Page(1).FindAsync();
             Assert.IsTrue(la.FirstOrDefault().Id != Guid.Empty);
         }
     }

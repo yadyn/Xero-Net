@@ -28,7 +28,7 @@ namespace CoreTests.Integration.LinkedTransactions
         {
             Given_a_source_invoice();
 
-            LinkedTransaction = Api.LinkedTransactions.Create(new LinkedTransaction
+            LinkedTransaction = Api.LinkedTransactions.CreateAsync(new LinkedTransaction
             {
                 SourceTransactionID = SourceId,
                 SourceLineItemID = SourceLineItemId
@@ -40,7 +40,7 @@ namespace CoreTests.Integration.LinkedTransactions
             Given_a_source_invoice();
             Given_a_contact();
 
-            LinkedTransaction = Api.LinkedTransactions.Create(new LinkedTransaction
+            LinkedTransaction = Api.LinkedTransactions.CreateAsync(new LinkedTransaction
             {
                 SourceTransactionID = SourceId,
                 SourceLineItemID = SourceLineItemId,
@@ -54,7 +54,7 @@ namespace CoreTests.Integration.LinkedTransactions
             Given_a_contact();
             Given_a_target_invoice(Contact);
 
-            LinkedTransaction = Api.LinkedTransactions.Create(new LinkedTransaction
+            LinkedTransaction = Api.LinkedTransactions.CreateAsync(new LinkedTransaction
             {
                 SourceTransactionID = SourceId,
                 SourceLineItemID = SourceLineItemId,
@@ -79,7 +79,7 @@ namespace CoreTests.Integration.LinkedTransactions
             if (contact == null)
                 contact = new Contact {Name = "ABC Bank"};
 
-            return Api.Create(new Invoice
+            return Api.CreateAsync(new Invoice
             {
                 Contact = contact,
                 Type = type,
@@ -108,14 +108,14 @@ namespace CoreTests.Integration.LinkedTransactions
 
         protected void Given_a_contact()
         {
-            var contacts = Api.Contacts.Find().ToList();
+            var contacts = Api.Contacts.FindAsync().ToList();
 
             if (contacts.Any())
             {
                 Contact = contacts.First();
             }
 
-            Contact = Api.Contacts.Create(new Contact
+            Contact = Api.Contacts.CreateAsync(new Contact
             {
                 Name = "Phil" + Guid.NewGuid().ToString("N")
             });

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using Xero.Api.Infrastructure.Http;
 using Xero.Api.Infrastructure.Interfaces;
 using HttpUtility = Xero.Api.Infrastructure.ThirdParty.HttpUtility.HttpUtility;
@@ -52,22 +53,22 @@ namespace Xero.Api.Infrastructure.OAuth
             }
         }
 
-        public IToken GetRequestToken(IConsumer consumer, string header)
+        public Task<IToken> GetRequestTokenAsync(IConsumer consumer, string header)
         {
-            return GetToken(_tokenUri,  new Token { ConsumerKey = consumer.ConsumerKey, ConsumerSecret = consumer.ConsumerSecret }, XeroRequestUri, header);
+            return GetTokenAsync(_tokenUri,  new Token { ConsumerKey = consumer.ConsumerKey, ConsumerSecret = consumer.ConsumerSecret }, XeroRequestUri, header);
         }
 
-        public IToken GetAccessToken(IToken token, string header)
+        public Task<IToken> GetAccessTokenAsync(IToken token, string header)
         {
-            return GetToken(_tokenUri, token, XeroAccessTokenUri, header);
+            return GetTokenAsync(_tokenUri, token, XeroAccessTokenUri, header);
         }
 
-        public IToken RenewAccessToken(IToken token, string header)
+        public Task<IToken> RenewAccessTokenAsync(IToken token, string header)
         {
-            return GetToken(_tokenUri, token, XeroAccessTokenUri, header);
+            return GetTokenAsync(_tokenUri, token, XeroAccessTokenUri, header);
         }
 
-        public IToken GetToken(string baseUri, IToken consumer, string endPoint, string header)
+        public async Task<IToken> GetTokenAsync(string baseUri, IToken consumer, string endPoint, string header)
         {
             var req = new HttpClient(baseUri)
             {
@@ -76,10 +77,10 @@ namespace Xero.Api.Infrastructure.OAuth
 
             if (_clientCertificate != null)
                 req.ClientCertificate = _clientCertificate;
-            
+
             req.AddHeader("Authorization", header);
 
-            var response = req.Post(endPoint, string.Empty);
+            var response = await req.PostAsync(endPoint, string.Empty);
 
             if (response.StatusCode != HttpStatusCode.OK)
             {

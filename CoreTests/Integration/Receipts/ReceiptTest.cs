@@ -9,7 +9,7 @@ namespace CoreTests.Integration.Receipts
     {
         public Receipt Given_a_receipt(Guid userId, string contactName, string description, decimal amount, string account)
         {
-            return Api.Create(new Receipt
+            return Api.CreateAsync(new Receipt
             {
                 Date = DateTime.UtcNow.Date,
                 Contact = new Contact { Name = contactName },

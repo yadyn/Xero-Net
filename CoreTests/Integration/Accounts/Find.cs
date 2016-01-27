@@ -15,7 +15,7 @@ namespace CoreTests.Integration.Accounts
         {
             var type = Api.Accounts
                 .Where("Type == \"OVERHEADS\"")
-                .Find()
+                .FindAsync()
                 .ToList().First().Type;
 
             Assert.AreEqual(AccountType.Overheads, type);
@@ -26,7 +26,7 @@ namespace CoreTests.Integration.Accounts
         {
             var expected = Api.Accounts
                 .Where("Type == \"REVENUE\"")
-                .Find()
+                .FindAsync()
                 .First()
                 .Id;
           
@@ -38,7 +38,7 @@ namespace CoreTests.Integration.Accounts
         [Test]
         public void finding_a_non_system_account_has_null_SystemAccount()
         {
-            var newNonSystemAccount = Api.Create(new Account
+            var newNonSystemAccount = Api.CreateAsync(new Account
             {
                 Code = Random.GetRandomString(10),
                 Type = AccountType.OtherIncome,
@@ -54,7 +54,7 @@ namespace CoreTests.Integration.Accounts
          [Test]
         public void find_accounts_ifmodifiedsince()
         {
-            var newNonSystemAccount = Api.Create(new Account
+            var newNonSystemAccount = Api.CreateAsync(new Account
             {
                 Code = Random.GetRandomString(10),
                 Type = AccountType.OtherIncome,
@@ -64,7 +64,7 @@ namespace CoreTests.Integration.Accounts
 
             var accounts = Api.Accounts
                 .ModifiedSince(DateTime.Now.AddMinutes(-1))
-                .Find();
+                .FindAsync();
 
             Assert.True(accounts.Any());
         }

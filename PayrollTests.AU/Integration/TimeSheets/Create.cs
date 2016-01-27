@@ -19,7 +19,7 @@ namespace PayrollTests.AU.Integration.TimeSheets
         [Test]
         public void create_timesheet()
         {
-            var timesheet = Api.Create(new Timesheet
+            var timesheet = Api.CreateAsync(new Timesheet
             {
                 EmployeeId = the_employee_id(),
                 StartDate = timesheet_start_date(),
@@ -31,7 +31,7 @@ namespace PayrollTests.AU.Integration.TimeSheets
         [Test]
         public void timesheet_with_lines()
         {
-            var timesheet = Api.Create(new Timesheet
+            var timesheet = Api.CreateAsync(new Timesheet
             {
                 EmployeeId = the_employee_id(),
                 StartDate = timesheet_start_date(),

@@ -40,7 +40,7 @@ namespace CoreTests.Integration.Contacts
                     }
             };
 
-            var updated = Api.Update(changes);
+            var updated = Api.UpdateAsync(changes);
 
             Assert.IsTrue(updated.Name.StartsWith("ABC"));
             Assert.IsTrue(updated.ContactNumber.StartsWith("ID001"));

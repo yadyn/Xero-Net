@@ -11,7 +11,7 @@ namespace PayrollTests.AU.Integration.Payrun
         public void find_all()
         {
             Given_a_payrun();
-            var payruns = Api.PayRuns.Find();
+            var payruns = Api.PayRuns.FindAsync();
             Assert.IsNotNull(payruns);
             Assert.IsTrue(payruns.FirstOrDefault().Id != Guid.Empty);
         }
@@ -20,7 +20,7 @@ namespace PayrollTests.AU.Integration.Payrun
         public void find_by_id()
         {
             var the_pr_id = Given_a_payrun().Id;
-            var payrun = Api.PayRuns.Find(the_pr_id);
+            var payrun = Api.PayRuns.FindAsync(the_pr_id);
             Assert.AreEqual(the_pr_id, payrun.Id);
         }
 
@@ -28,7 +28,7 @@ namespace PayrollTests.AU.Integration.Payrun
         public void find_paged()
         {
             Given_a_payrun();
-            var payruns = Api.PayRuns.Page(1).Find();
+            var payruns = Api.PayRuns.Page(1).FindAsync();
             Assert.IsNotNull(payruns);
             Assert.IsTrue(payruns.FirstOrDefault().Id != Guid.Empty);
         }

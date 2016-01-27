@@ -7,7 +7,7 @@ namespace PayrollTests.US.Integration.Employees
     {
         protected Employee Given_an_employee()
         {
-            var employee = Api.Create(new Employee
+            var employee = Api.CreateAsync(new Employee
             {
                 FirstName = "John " + Guid.NewGuid().ToString("N"),
                 LastName = "Smith",

@@ -9,7 +9,7 @@ namespace CoreTests.Integration.Items.TrackedItems
         {
             Given_a_tracked_item();
 
-            var trackedItem = Api.Items.Find(CreatedItem.Id);
+            var trackedItem = Api.Items.FindAsync(CreatedItem.Id);
 
             Assert.AreEqual(CreatedItem.Id, trackedItem.Id, "Expected the ID of the created item and retrieved item to be the same but weren't");
             Assert.True(trackedItem.IsTrackedAsInventory, "Expected the retrieved items IsTrackedAsInventory value to be true, but was false");

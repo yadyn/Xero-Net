@@ -8,7 +8,7 @@ namespace PayrollTests.US.Integration.PaySchedules
     {
         public PaySchedule Given_a_payschedule()
         {
-            return Api.Create(new PaySchedule
+            return Api.CreateAsync(new PaySchedule
             {
                 Name = "New Schedule",
                 ScheduleType = ScheduleType.Weekly,

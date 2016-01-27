@@ -9,7 +9,7 @@ namespace PayrollTests.AU.Integration.Employees
     {
         protected Employee Given_an_employee(bool terminated = false)
         {
-            var employee = Api.Create(new Employee
+            var employee = Api.CreateAsync(new Employee
             {
                 FirstName = "John " + Guid.NewGuid().ToString("N"),
                 LastName = "Smith",
@@ -26,30 +26,30 @@ namespace PayrollTests.AU.Integration.Employees
 
         protected Guid earnings_rate_id()
         {
-            return Api.PayItems.Find().FirstOrDefault().EarningsRates.FirstOrDefault().Id;
+            return Api.PayItems.FindAsync().FirstOrDefault().EarningsRates.FirstOrDefault().Id;
         }
 
 
         protected Guid deduction_type_id()
         {
-            return Api.PayItems.Find().FirstOrDefault().DeductionTypes.FirstOrDefault().Id;
+            return Api.PayItems.FindAsync().FirstOrDefault().DeductionTypes.FirstOrDefault().Id;
         }
 
         protected Guid reimbersment_type_id()
         {
-            return Api.PayItems.Find().FirstOrDefault().ReimbursementTypes.FirstOrDefault().Id;
+            return Api.PayItems.FindAsync().FirstOrDefault().ReimbursementTypes.FirstOrDefault().Id;
         }
 
 
         protected Guid leave_type_id()
         {
-            return Api.PayItems.Find().FirstOrDefault().LeaveTypes.FirstOrDefault().Id;
+            return Api.PayItems.FindAsync().FirstOrDefault().LeaveTypes.FirstOrDefault().Id;
         }
 
 
         protected Guid super_fund_id()
         {
-            var sf = Api.SuperFunds.Find();
+            var sf = Api.SuperFunds.FindAsync();
             
             if (sf.FirstOrDefault().Id != Guid.Empty)
             {
@@ -57,7 +57,7 @@ namespace PayrollTests.AU.Integration.Employees
             }
             else
             {
-                return Api.Create(new SuperFund
+                return Api.CreateAsync(new SuperFund
                 {
                     Type = SuperfundType.Regulated,
                     Abn = 78984178687,

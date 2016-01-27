@@ -21,10 +21,10 @@ namespace CoreTests.Integration.ManualJournals
         {
             return Api.Accounts
                 .Where(string.Format("Type == \"{0}\"", type.ToString().ToUpper()))
-                .Find()
+                .FindAsync()
                 .FirstOrDefault() ??
 
-                Api.Create(new Account
+                Api.CreateAsync(new Account
                 {
                     Name = Random.GetRandomString(20),
                     Code = Random.GetRandomString(10),
@@ -34,7 +34,7 @@ namespace CoreTests.Integration.ManualJournals
 
         protected ManualJournal Given_a_manual_journal(string narration, decimal amount)
         {
-            return Api.Create(new ManualJournal
+            return Api.CreateAsync(new ManualJournal
             {
                 Narration = narration,
                 Lines = new List<Line>

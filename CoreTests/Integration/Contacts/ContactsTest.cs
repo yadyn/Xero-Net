@@ -12,7 +12,7 @@ namespace CoreTests.Integration.Contacts
 
         protected Contact Given_a_contact()
         {
-            var contact = Api.Create(new Contact
+            var contact = Api.CreateAsync(new Contact
             {
                 Name = "Peter " + Random.GetRandomString(10)
             });
@@ -21,7 +21,7 @@ namespace CoreTests.Integration.Contacts
 
         protected TrackingCategory findOrCreateTC(string OptionName, string TCName)
         {
-            trackingCat = Api.TrackingCategories.GetAll().FirstOrDefault();
+            trackingCat = Api.TrackingCategories.GetAllAsync().FirstOrDefault();
             if (trackingCat == null || trackingCat.Options.FirstOrDefault() == null)
             {
                 var option1 = new Option()
@@ -32,7 +32,7 @@ namespace CoreTests.Integration.Contacts
                 };
 
 
-                trackingCat = Api.TrackingCategories.Create(new TrackingCategory()
+                trackingCat = Api.TrackingCategories.CreateAsync(new TrackingCategory()
                 {
                     Name = TCName,
                     Status = TrackingCategoryStatus.Active
@@ -41,7 +41,7 @@ namespace CoreTests.Integration.Contacts
 
                 Api.TrackingCategories[trackingCat.Id].Add(option1);
 
-                trackingCat = Api.TrackingCategories.GetByID(trackingCat.Id);
+                trackingCat = Api.TrackingCategories.GetByIDAsync(trackingCat.Id);
                 wasTCCreated = true;
             }
             return trackingCat;
@@ -51,7 +51,7 @@ namespace CoreTests.Integration.Contacts
         {
             if (wasTCCreated)
             {
-                Api.TrackingCategories.Delete(trackingCat);
+                Api.TrackingCategories.DeleteAsync(trackingCat);
                 wasTCCreated = false;
             }
         }

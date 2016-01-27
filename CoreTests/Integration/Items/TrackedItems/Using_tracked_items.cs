@@ -15,7 +15,7 @@ namespace CoreTests.Integration.Items.TrackedItems
 
             Given_an_ACCPAY_invoice_using_the_item_with_code(CreatedItem.Code);
 
-            var item = Api.Items.Find(CreatedItem.Id);
+            var item = Api.Items.FindAsync(CreatedItem.Id);
 
             Then_the_quantity_of_the_tracked_item_is_more_than_zero(item);
         }
@@ -32,7 +32,7 @@ namespace CoreTests.Integration.Items.TrackedItems
 
             Given_an_ACCPAY_invoice_using_the_item_with_code(CreatedItem.Code);
 
-            var item = Api.Items.Find(CreatedItem.Id);
+            var item = Api.Items.FindAsync(CreatedItem.Id);
 
             Then_the_quantity_of_the_tracked_item_is_more_than_zero(item);
 
@@ -53,7 +53,7 @@ namespace CoreTests.Integration.Items.TrackedItems
 
             Given_a_zero_total_ACCPAY_invoice_using_the_item_with_code(CreatedItem.Code);
 
-            var item = Api.Items.Find(CreatedItem.Id);
+            var item = Api.Items.FindAsync(CreatedItem.Id);
             Then_the_quantity_of_the_tracked_item_is_more_than_zero(item);
         }
 
@@ -67,12 +67,12 @@ namespace CoreTests.Integration.Items.TrackedItems
 
             Given_a_zero_total_ACCPAY_invoice_using_the_item_with_code(CreatedItem.Code);
 
-            var item = Api.Items.Find(CreatedItem.Id);
+            var item = Api.Items.FindAsync(CreatedItem.Id);
             Then_the_quantity_of_the_tracked_item_is_more_than_zero(item);
  
             Given_a_zero_total_ACCREC_invoice_using_the_item_with_code(CreatedItem.Code);
 
-            item = Api.Items.Find(CreatedItem.Id);
+            item = Api.Items.FindAsync(CreatedItem.Id);
 
             Then_the_quantity_of_the_tracked_item_is_zero(item);
         }
@@ -85,7 +85,7 @@ namespace CoreTests.Integration.Items.TrackedItems
             //Create a tracked item with no quantity, and therefore no total cost pool
             Given_a_tracked_item();
 
-            var item = Api.Items.Find(CreatedItem.Id);
+            var item = Api.Items.FindAsync(CreatedItem.Id);
 
             var quantity = item.QuantityOnHand;
             Assert.True(quantity == 0, "Expected the quanity on hand of a new inventory item to be 0");

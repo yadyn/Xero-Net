@@ -11,7 +11,7 @@ namespace CoreTests.Integration.ContactGroups
         // need a contact in the system to use contact groups with.
         protected Contact Given_a_contact()
         {
-            var contact = Api.Create(new Contact
+            var contact = Api.CreateAsync(new Contact
             {
                 Name = "Peter " + Guid.NewGuid().ToString("N")
             });
@@ -19,7 +19,7 @@ namespace CoreTests.Integration.ContactGroups
         }
         protected ContactGroup Given_a_contactgroup()
         {
-            var group = Api.ContactGroups.Add(new ContactGroup
+            var group = Api.ContactGroups.AddAsync(new ContactGroup
             {
                 Name = "Nice People " + Guid.NewGuid()
 

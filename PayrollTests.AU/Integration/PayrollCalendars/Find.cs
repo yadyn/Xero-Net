@@ -10,7 +10,7 @@ namespace PayrollTests.AU.Integration.PayrollCalendars
         [Test]
         public void find_all()
         {
-            var prc = Api.PayrollCalendars.Find();
+            var prc = Api.PayrollCalendars.FindAsync();
             Assert.True(prc.Any());
             Assert.True(prc.FirstOrDefault().Id != Guid.Empty);
         }
@@ -18,7 +18,7 @@ namespace PayrollTests.AU.Integration.PayrollCalendars
         [Test]
         public void find_paged()
         {
-            var prc = Api.PayrollCalendars.Page(1).Find();
+            var prc = Api.PayrollCalendars.Page(1).FindAsync();
             Assert.True(prc.Any());
             Assert.True(prc.FirstOrDefault().Id != Guid.Empty);
         }

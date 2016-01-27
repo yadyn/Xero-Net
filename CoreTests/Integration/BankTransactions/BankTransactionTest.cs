@@ -15,7 +15,7 @@ namespace CoreTests.Integration.BankTransactions
 
         public BankTransaction Given_a_bank_transaction(BankTransactionType type)
         {
-            return Api.Create(new BankTransaction
+            return Api.CreateAsync(new BankTransaction
             {
                 Type = type,
                 Contact = new Contact { Name = "ABC Bank" },
@@ -35,7 +35,7 @@ namespace CoreTests.Integration.BankTransactions
 
         public BankTransaction Given_an_overpayment(BankTransactionType type)
         {
-            return Api.Create(new BankTransaction
+            return Api.CreateAsync(new BankTransaction
             {
                 Type = type,
                 Contact = new Contact { Name = "ABC Bank" },
@@ -55,7 +55,7 @@ namespace CoreTests.Integration.BankTransactions
 
         public Guid FindBankAccountGuid()
         {
-            var bankAccount = Api.Accounts.Where("Type == \"BANK\"").Find().FirstOrDefault();
+            var bankAccount = Api.Accounts.Where("Type == \"BANK\"").FindAsync().FirstOrDefault();
 
             if (bankAccount != null)
             {

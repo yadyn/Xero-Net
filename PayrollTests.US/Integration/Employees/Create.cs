@@ -11,7 +11,7 @@ namespace PayrollTests.US.Integration.Employees
         [Test]
         public void create_employee()
         {
-            var emp = Api.Create(new Employee
+            var emp = Api.CreateAsync(new Employee
             {
                 FirstName = "John",
                 LastName = "Smith",
@@ -38,7 +38,7 @@ namespace PayrollTests.US.Integration.Employees
         {
             Assert.DoesNotThrow(() =>
             {
-                var employee = Api.Create(new Employee
+                var employee = Api.CreateAsync(new Employee
                 {
                     FirstName = "John",
                     LastName = "Smith",

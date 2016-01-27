@@ -10,7 +10,7 @@ namespace PayrollTests.AU.Integration.Settings
         [Test]
         public void find_all()
         {
-            var settings = Api.Settings.Find();
+            var settings = Api.Settings.FindAsync();
             Assert.IsNotNull(settings);
 
             foreach (var s in settings)

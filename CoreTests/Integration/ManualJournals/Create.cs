@@ -35,7 +35,7 @@ namespace CoreTests.Integration.ManualJournals
         {
             const string narration = "We know what we want to do";
 
-            var manual = Api.Create(new ManualJournal
+            var manual = Api.CreateAsync(new ManualJournal
             {
                 Narration = narration,
                 Lines = new List<Line>

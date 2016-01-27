@@ -10,7 +10,7 @@ namespace CoreTests.Integration.LinkedTransactions
         {
             Given_a_source_invoice();
             
-            var linkedTransaction = Api.LinkedTransactions.Create(new LinkedTransaction
+            var linkedTransaction = Api.LinkedTransactions.CreateAsync(new LinkedTransaction
             {
                 SourceTransactionID = SourceId,
                 SourceLineItemID = SourceLineItemId
@@ -28,7 +28,7 @@ namespace CoreTests.Integration.LinkedTransactions
             Given_a_contact();
             Given_a_source_invoice();
 
-            var linkedTransaction = Api.LinkedTransactions.Create(new LinkedTransaction
+            var linkedTransaction = Api.LinkedTransactions.CreateAsync(new LinkedTransaction
             {
                 SourceTransactionID = SourceId,
                 SourceLineItemID = SourceLineItemId,
@@ -50,7 +50,7 @@ namespace CoreTests.Integration.LinkedTransactions
             Given_a_target_invoice(Contact);
 
 
-            var linkedTransaction = Api.LinkedTransactions.Create(new LinkedTransaction
+            var linkedTransaction = Api.LinkedTransactions.CreateAsync(new LinkedTransaction
             {
                 SourceTransactionID = SourceId,
                 SourceLineItemID = SourceLineItemId,

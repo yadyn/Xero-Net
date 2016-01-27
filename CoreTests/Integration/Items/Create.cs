@@ -12,7 +12,7 @@ namespace CoreTests.Integration.Items
         {
             var code = "Woo-hoo " + Random.GetRandomString(10);
 
-            var item = Api.Create(new Item
+            var item = Api.CreateAsync(new Item
             {
                 Code = code
             });
@@ -26,7 +26,7 @@ namespace CoreTests.Integration.Items
         {
             var code = "Woo-hoo " + Random.GetRandomString(10);
 
-            var item = Api.Create(new Item
+            var item = Api.CreateAsync(new Item
             {
                 Code = code,
                 Description = "Buy cheap sell high",

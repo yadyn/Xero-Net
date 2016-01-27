@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 using Xero.Api.Common;
 using Xero.Api.Core.Model;
 using Xero.Api.Infrastructure.Http;
@@ -18,32 +19,32 @@ namespace Xero.Api.Core.Endpoints
             _client = client;
         }
 
-        public Allocation Add(Allocation allocation)
+        public async Task<Allocation> AddAsync(Allocation allocation)
         {
             var endpoint = string.Format("/api.xro/2.0/CreditNotes/{0}/Allocations", allocation.CreditNote.Id);
 
-            return (Allocation)Add(allocation, endpoint);
+            return (Allocation)(await AddAsync(allocation, endpoint));
         }
 
-        public CreditNoteAllocation Add(CreditNoteAllocation allocation)
+        public async Task<CreditNoteAllocation> AddAsync(CreditNoteAllocation allocation)
         {
             var endpoint = string.Format("/api.xro/2.0/CreditNotes/{0}/Allocations", allocation.CreditNote.Id);
 
-            return (CreditNoteAllocation)Add(allocation, endpoint);
+            return (CreditNoteAllocation)(await AddAsync(allocation, endpoint));
         }
 
-        public PrepaymentAllocation Add(PrepaymentAllocation allocation)
+        public async Task<PrepaymentAllocation> AddAsync(PrepaymentAllocation allocation)
         {
             var endpoint = string.Format("/api.xro/2.0/Prepayments/{0}/Allocations", allocation.Prepayment.Id);
 
-            return (PrepaymentAllocation)Add(allocation, endpoint);
+            return (PrepaymentAllocation)(await AddAsync(allocation, endpoint));
         }
 
-        public OverpaymentAllocation Add(OverpaymentAllocation allocation)
+        public async Task<OverpaymentAllocation> AddAsync(OverpaymentAllocation allocation)
         {
             var endpoint = string.Format("/api.xro/2.0/Overpayments/{0}/Allocations", allocation.Overpayment.Id);
 
-            return (OverpaymentAllocation)Add(allocation, endpoint);
+            return (OverpaymentAllocation)(await AddAsync(allocation, endpoint));
         }
 
         private AllocationsResponse<T> HandleResponse<T>(Infrastructure.Http.Response response)
@@ -60,15 +61,14 @@ namespace Xero.Api.Core.Endpoints
             return null;
         }
 
-        public AllocationBase Add<T>(T allocation, string endpoint)
+        public async Task<AllocationBase> AddAsync<T>(T allocation, string endpoint)
             where T : AllocationBase
         {
-            var allocations = HandleResponse<T>(_client
+            var response = HandleResponse<T>(await _client
                 .Client
-                .Put(endpoint, _client.XmlMapper.To(new List<T> { allocation })))
-                .Allocations;
+                .PutAsync(endpoint, _client.XmlMapper.To(new List<T> { allocation })));
 
-            return allocations.FirstOrDefault();
+            return response.Allocations.FirstOrDefault();
         }
     }
 

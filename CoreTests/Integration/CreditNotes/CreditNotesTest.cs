@@ -20,7 +20,7 @@ namespace CoreTests.Integration.CreditNotes
 
         public CreditNote Given_a_creditnote(string contactName = "Apple Computers Ltd", CreditNoteType type = CreditNoteType.AccountsPayable, InvoiceStatus status = InvoiceStatus.Draft)
         {
-            return Api.CreditNotes.Create(new CreditNote
+            return Api.CreditNotes.CreateAsync(new CreditNote
             {
                 Contact = new Contact { Name = contactName },
                 Type = type,

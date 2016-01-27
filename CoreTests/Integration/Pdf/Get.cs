@@ -23,18 +23,18 @@ namespace CoreTests.Integration.Pdf
         [Test]
         public void invoice_gives_404_when_not_found()
         {
-            Assert.Throws<NotFoundException>(() => Api.PdfFiles.Get(PdfEndpointType.Invoices, Guid.NewGuid()));
+            Assert.Throws<NotFoundException>(() => Api.PdfFiles.GetAsync(PdfEndpointType.Invoices, Guid.NewGuid()));
         }
 
         [Test]
         public void credit_note_gives_404_when_not_found()
         {
-            Assert.Throws<NotFoundException>(() => Api.PdfFiles.Get(PdfEndpointType.CreditNotes, Guid.NewGuid()));
+            Assert.Throws<NotFoundException>(() => Api.PdfFiles.GetAsync(PdfEndpointType.CreditNotes, Guid.NewGuid()));
         }
 
         private void AssertOk(PdfEndpointType type, Guid id)
         {
-            var pdf = Api.PdfFiles.Get(type, id);
+            var pdf = Api.PdfFiles.GetAsync(type, id);
             var expected = id.ToString("D") + ".pdf";
 
             Assert.NotNull(pdf);

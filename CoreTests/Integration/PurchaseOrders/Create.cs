@@ -13,7 +13,7 @@ namespace CoreTests.Integration.PurchaseOrders
         public void Create_minimal_draft_purchase_order()
         {
 
-            var purchaseOrder = Api.PurchaseOrders.Create(
+            var purchaseOrder = Api.PurchaseOrders.CreateAsync(
                 new PurchaseOrder
                 {
                     Date = DateTime.Today,
@@ -28,7 +28,7 @@ namespace CoreTests.Integration.PurchaseOrders
         [Test]
         public void Create_authorised_purchase_order()
         {
-            var purchaseOrder = Api.PurchaseOrders.Create(
+            var purchaseOrder = Api.PurchaseOrders.CreateAsync(
                 new PurchaseOrder
                 {
                     Status = PurchaseOrderStatus.Authorised,
@@ -55,7 +55,7 @@ namespace CoreTests.Integration.PurchaseOrders
         {
             get
             {
-                return Api.Contacts.Find().First().Id;
+                return Api.Contacts.FindAsync().First().Id;
             }
         }
     }

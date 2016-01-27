@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Xero.Api.Core.Endpoints.Base;
 using Xero.Api.Core.Model;
 using Xero.Api.Core.Response;
@@ -11,63 +12,56 @@ namespace Xero.Api.Core.Endpoints
 {
     public class InboxEndpoint : XeroUpdateEndpoint<InboxEndpoint,Model.Folder,FolderRequest,FolderResponse>
     {
-
         internal InboxEndpoint(XeroHttpClient client)
             : base(client, "files.xro/1.0/Inbox")
         {
             
         }
 
-        private Guid Inbox
+        private async Task<Guid> GetInboxIdAsync()
         {
-            get
-            {
-                var endpoint = string.Format("files.xro/1.0/Inbox");
+            var endpoint = string.Format("files.xro/1.0/Inbox");
 
-                var folder = HandleInboxResponse(Client
-                    .Client
-                    .Get(endpoint, null));
+            var folder = HandleInboxResponse(await Client
+                .Client
+                .GetAsync(endpoint, null));
 
-                return folder.Id; 
-            }
-
+            return folder.Id;
         }
 
-        public Model.File this[Guid id]
-        {
-            get
-            {
-                var result = Find(id);
-                return result;
-            }
-        }
+        //public Model.File this[Guid id]
+        //{
+        //    get
+        //    {
+        //        var result = FindAsync(id);
+        //        return result;
+        //    }
+        //}
 
-        public Model.File Find(Guid fileId)
+        public new async Task<Model.File> FindAsync(Guid fileId)
         {
-            var response = HandleFileResponse(Client
-                .Client.Get("files.xro/1.0/Files", ""));
+            var response = HandleFileResponse(await Client
+                .Client.GetAsync("files.xro/1.0/Files", ""));
 
             return response.Items.SingleOrDefault(i => i.Id == fileId);
         }
 
-        public FilesResponse Add(Model.File file, byte[] data)
+        public async Task<FilesResponse> AddAsync(Model.File file, byte[] data)
         {
+            var inboxId = await GetInboxIdAsync();
 
-            var response = HandleFileResponse(Client
+            var response = HandleFileResponse(await Client
                 .Client
-                .PostMultipartForm("files.xro/1.0/Files/" + Inbox, file.Mimetype , file.Name, file.Name, data));
+                .PostMultipartFormAsync("files.xro/1.0/Files/" + inboxId, file.Mimetype , file.Name, file.Name, data));
 
             return response;
         }
 
-
-     
-
-        public FilesResponse Remove(Guid fileid)
+        public async Task<FilesResponse> RemoveAsync(Guid fileid)
         {
-            var response = HandleFileResponse(Client
+            var response = HandleFileResponse(await Client
                 .Client
-                .Delete("files.xro/1.0/Files/" + fileid.ToString()));
+                .DeleteAsync("files.xro/1.0/Files/" + fileid.ToString()));
 
             return response;
         }
@@ -102,21 +96,23 @@ namespace Xero.Api.Core.Endpoints
         }
       
 
-        public Folder InboxFolder
+        public async Task<Folder> GetInboxFolderAsync()
         {
-            get
-            {
-                var endpoint = string.Format("files.xro/1.0/Inbox");
+            var endpoint = string.Format("files.xro/1.0/Inbox");
 
-                var folder = HandleFoldersResponse(Client
-                    .Client
-                    .Get(endpoint, null));
+            var folders = HandleFoldersResponse(await Client
+                .Client
+                .GetAsync(endpoint, null));
 
-                var resultingFolders = from i in folder
-                                       select new Folder() { Id = i.Id, Name = i.Name, IsInbox = i.IsInbox, FileCount = i.FileCount };
-
-                return resultingFolders.First();
-            }
+            return folders
+                .Select(i => new Folder()
+                {
+                    Id = i.Id,
+                    Name = i.Name,
+                    IsInbox = i.IsInbox,
+                    FileCount = i.FileCount
+                })
+                .First();
         }
 
         private FoldersResponse[] HandleFoldersResponse(Infrastructure.Http.Response response)

@@ -20,7 +20,7 @@ namespace CoreTests.Integration.Invoices
 
         public Invoice Given_an_invoice(InvoiceType type = InvoiceType.AccountsPayable, InvoiceStatus status = InvoiceStatus.Draft)
         {
-            return Api.Create(new Invoice
+            return Api.CreateAsync(new Invoice
             {
                 Contact = new Contact { Name = "ABC Bank" },
                 Type = type,
@@ -43,7 +43,7 @@ namespace CoreTests.Integration.Invoices
 
         public Invoice Given_a_description_only_invoice(InvoiceType type = InvoiceType.AccountsPayable)
         {
-            return Api.Create(new Invoice
+            return Api.CreateAsync(new Invoice
             {
                 Contact = new Contact { Name = "Richard" },
                 Type = type,

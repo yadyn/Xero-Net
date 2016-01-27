@@ -9,7 +9,7 @@ namespace CoreTests.Integration.TaxRates
     {
         protected TaxRate Given_a_tax_rate(string name, ReportTaxType taxType, string state, decimal stateRate, string local, decimal localRate)
         {
-            return Api.Create(new[]{ new TaxRate
+            return Api.CreateAsync(new[]{ new TaxRate
             {
                 Name = name,
                 ReportTaxType = taxType,

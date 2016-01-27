@@ -8,7 +8,7 @@ namespace PayrollTests.AU.Integration.PayItems
     {
         public Xero.Api.Payroll.Australia.Model.PayItems Given_some_payitems()
         {
-            return Api.Create(new Xero.Api.Payroll.Australia.Model.PayItems
+            return Api.CreateAsync(new Xero.Api.Payroll.Australia.Model.PayItems
             {
                 DeductionTypes = new List<DeductionType>
                 {

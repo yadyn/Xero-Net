@@ -16,7 +16,7 @@ namespace CoreTests.Integration.Files.Files
         [Test]
         public void can_get_all_files_like_this()
         {
-            var result = Api.Files.Find();
+            var result = Api.Files.FindAsync();
 
             Assert.True(result != null);
         }
@@ -26,11 +26,11 @@ namespace CoreTests.Integration.Files.Files
         {
             var filename = "My Test File " + Guid.NewGuid() + ".png";
 
-            var inboxId = Api.Inbox.InboxFolder.Id;
+            var inboxId = Api.Inbox.GetInboxFolderAsync.Id;
 
             var id = Given_a_file_in(inboxId, filename);
 
-            var content = Api.Files.GetContent(id,"image/png");
+            var content = Api.Files.GetContentAsync(id,"image/png");
             
             Assert.IsTrue(StructuralComparisons.StructuralEqualityComparer.Equals(content,exampleFile));
         }
@@ -38,11 +38,11 @@ namespace CoreTests.Integration.Files.Files
        [Test]
         public void can_remove_a_file_like_this()
         {
-            var inboxId = Api.Inbox.InboxFolder.Id;
+            var inboxId = Api.Inbox.GetInboxFolderAsync.Id;
 
             var result = Given_a_file_in(inboxId, "Test " + Guid.NewGuid()  + ".png");
 
-            Api.Files.Remove(result);
+            Api.Files.RemoveAsync(result);
 
             var notfound= Api.Files[result];  
 
@@ -53,7 +53,7 @@ namespace CoreTests.Integration.Files.Files
        [Test]
        public void can_rename_a_file_like_this()
        {
-           var inboxId = Api.Inbox.InboxFolder.Id;
+           var inboxId = Api.Inbox.GetInboxFolderAsync.Id;
 
            var result = Given_a_file_in(inboxId, "Test " + Guid.NewGuid()  + ".png");
 
@@ -70,13 +70,13 @@ namespace CoreTests.Integration.Files.Files
        [Test]
        public void can_move_a_file_like_this()
        {
-           var inboxId = Api.Inbox.InboxFolder.Id;
+           var inboxId = Api.Inbox.GetInboxFolderAsync.Id;
 
            var result = Given_a_file_in(inboxId, "Test " + Guid.NewGuid() + ".png");
 
-           var newFolder = Api.Folders.Add("stuff");
+           var newFolder = Api.Folders.AddAsync("stuff");
 
-           var updateResult = Api.Files.Move(result, newFolder.Id);
+           var updateResult = Api.Files.MoveAsync(result, newFolder.Id);
 
            Assert.IsTrue(updateResult.FolderId == newFolder.Id);
 
@@ -85,7 +85,7 @@ namespace CoreTests.Integration.Files.Files
        [Test]
        public void cannot_add_a_file_with_bad_filename_charactors()
        {
-           var inboxId = Api.Inbox.InboxFolder.Id;
+           var inboxId = Api.Inbox.GetInboxFolderAsync.Id;
 
            char[] badchar = System.IO.Path.GetInvalidFileNameChars();
 
@@ -93,7 +93,7 @@ namespace CoreTests.Integration.Files.Files
 
            Assert.Throws<WebException>(() =>
            {
-               Api.Files.Add( inboxId, create_file_with_name(filename), exampleFile);
+               Api.Files.AddAsync( inboxId, create_file_with_name(filename), exampleFile);
            });
        }
 

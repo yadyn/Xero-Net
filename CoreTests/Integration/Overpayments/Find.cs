@@ -10,21 +10,21 @@ namespace CoreTests.Integration.Overpayments
         [Test]
         public void find_all()
         {
-            var overpayments = Api.Overpayments.Find();
+            var overpayments = Api.Overpayments.FindAsync();
             Assert.Greater(overpayments.Count(), 0);
         }
 
         [Test]
         public void find_all_receive_overpayments()
         {
-            var overpayments = Api.Overpayments.Where("Type == \"RECEIVE-OVERPAYMENT\"").Find();
+            var overpayments = Api.Overpayments.Where("Type == \"RECEIVE-OVERPAYMENT\"").FindAsync();
             Assert.True(overpayments.All(p => p.Type == OverpaymentType.ReceiveOverpayment));
         }
 
         [Test]
         public void find_all_spend_overpayments()
         {
-            var overpayments = Api.Overpayments.Where("Type == \"SPEND-OVERPAYMENT\"").Find();
+            var overpayments = Api.Overpayments.Where("Type == \"SPEND-OVERPAYMENT\"").FindAsync();
             Assert.True(overpayments.All(p => p.Type == OverpaymentType.SpendOverpayment));
         }
     }

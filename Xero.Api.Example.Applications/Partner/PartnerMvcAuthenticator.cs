@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using Xero.Api.Example.Applications.Public;
 using Xero.Api.Infrastructure.Interfaces;
 using Xero.Api.Infrastructure.OAuth.Signing;
@@ -47,7 +48,7 @@ namespace Xero.Api.Example.Applications.Partner
         protected override string CreateSignature(IToken token, string verb, Uri uri,
             string verifier, bool renewToken = false, string callback = null)
         {
-            return new RsaSha1Signer().CreateSignature(_signingCertificate, token, uri, verb, verifier, renewToken, callback);
+            return RsaSha1Signer.CreateSignature(_signingCertificate, token, uri, verb, verifier, renewToken, callback);
         }
 
         protected override X509Certificate2 GetClientCertificate()
@@ -55,11 +56,11 @@ namespace Xero.Api.Example.Applications.Partner
             return _certificate;
         }
 
-        protected override IToken RenewToken(IToken sessionToken, IConsumer consumer)
+        protected override Task<IToken> RenewTokenAsync(IToken sessionToken, IConsumer consumer)
         {
             var authHeader = GetAuthorization(sessionToken, "POST", Tokens.AccessUri, null, null, true);
 
-            return Tokens.GetAccessToken(sessionToken, authHeader);
+            return Tokens.GetAccessTokenAsync(sessionToken, authHeader);
         }
     }
 }

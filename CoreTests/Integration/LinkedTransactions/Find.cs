@@ -9,7 +9,7 @@ namespace CoreTests.Integration.LinkedTransactions
         public void find_by_page()
         {
             Given_a_basic_linked_transaction();
-            var linkedTransactions = Api.LinkedTransactions.Page(1).Find();
+            var linkedTransactions = Api.LinkedTransactions.Page(1).FindAsync();
 
             Assert.Greater(linkedTransactions.Count(), 0);
         }
@@ -20,7 +20,7 @@ namespace CoreTests.Integration.LinkedTransactions
             Given_a_basic_linked_transaction();
             var expected = LinkedTransactionId;
 
-            var linkedTransaction = Api.LinkedTransactions.Find(expected);
+            var linkedTransaction = Api.LinkedTransactions.FindAsync(expected);
 
             Assert.AreEqual(expected, linkedTransaction.Id);
         }
@@ -31,7 +31,7 @@ namespace CoreTests.Integration.LinkedTransactions
             Given_a_basic_linked_transaction();
             var sourceTransactionId = SourceId;
 
-            var linkedTransactions = Api.LinkedTransactions.WhereSourceId(sourceTransactionId).Find().ToList();
+            var linkedTransactions = Api.LinkedTransactions.WhereSourceId(sourceTransactionId).FindAsync().ToList();
             
             Assert.Greater(linkedTransactions.Count(), 0);
             Assert.AreEqual(sourceTransactionId, linkedTransactions.First().SourceTransactionID);
@@ -43,7 +43,7 @@ namespace CoreTests.Integration.LinkedTransactions
             Given_a_linked_transaction_assigned_to_a_contact();
             var contactId = ContactId;
 
-            var linkedTransactions = Api.LinkedTransactions.WhereContactId(contactId).Find().ToList();
+            var linkedTransactions = Api.LinkedTransactions.WhereContactId(contactId).FindAsync().ToList();
 
             Assert.Greater(linkedTransactions.Count(), 0);
             Assert.AreEqual(contactId, linkedTransactions.First().ContactID);
@@ -55,7 +55,7 @@ namespace CoreTests.Integration.LinkedTransactions
             Given_a_fully_allocated_linked_transaction();
             var targetTransactionId = TargetId;
 
-            var linkedTransactions = Api.LinkedTransactions.WhereTargetId(targetTransactionId).Find().ToList();
+            var linkedTransactions = Api.LinkedTransactions.WhereTargetId(targetTransactionId).FindAsync().ToList();
 
             Assert.Greater(linkedTransactions.Count(), 0);
             Assert.AreEqual(targetTransactionId, linkedTransactions.First().TargetTransactionID);

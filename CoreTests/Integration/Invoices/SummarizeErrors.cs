@@ -29,7 +29,7 @@ namespace CoreTests.Integration.Invoices
         private IEnumerable<Invoice> Given_a_bad_invoice(InvoiceType type = InvoiceType.AccountsPayable, InvoiceStatus status = InvoiceStatus.Draft, bool summariseErrors = true)
         {
             Api.Invoices.SummarizeErrors(summariseErrors);
-            return Api.Create(new[]
+            return Api.CreateAsync(new[]
             {
                 new Invoice
                 {

@@ -11,7 +11,7 @@ namespace PayrollTests.AU.Integration.PayrollCalendars
         [Test]
         public void create_payroll_calendar()
         {
-            var pc = Api.Create(new PayrollCalendar
+            var pc = Api.CreateAsync(new PayrollCalendar
             {
                 Name = "New Calendar",
                 CalendarType = CalendarType.Weekly,

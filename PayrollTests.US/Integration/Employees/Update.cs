@@ -12,7 +12,7 @@ namespace PayrollTests.US.Integration.Employees
         {
             var emp = Given_an_employee();
 
-            var updated_emp = Api.Update(new Employee
+            var updated_emp = Api.UpdateAsync(new Employee
             {
                 Id = emp.Id,
             });

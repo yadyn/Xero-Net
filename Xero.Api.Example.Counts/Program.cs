@@ -17,7 +17,7 @@ namespace Xero.Api.Example.Counts
                 UserAgent = "Xero Api - Listing example"
             };
 
-            new Lister(api).List();            
+            new Lister(api).ListAsync().GetAwaiter().GetResult();            
         }
     }
 }

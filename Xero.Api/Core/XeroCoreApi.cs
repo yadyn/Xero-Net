@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xero.Api.Common;
 using Xero.Api.Core.Endpoints;
 using Xero.Api.Core.Model;
@@ -131,217 +132,222 @@ namespace Xero.Api.Core
             Users = new UsersEndpoint(Client);
         }
 
-        public Organisation Organisation
+        //public Organisation Organisation
+        //{
+        //    get
+        //    {
+        //        return OrganisationEndpoint.FindAsync().FirstOrDefault();
+        //    }
+        //}
+
+        public async Task<Organisation> GetDefaultOrganisationAsync()
         {
-            get
-            {
-                return OrganisationEndpoint.Find().FirstOrDefault();
-            }
+            return (await OrganisationEndpoint.FindAsync()).FirstOrDefault();
         }
 
-        public IEnumerable<Invoice> Create(IEnumerable<Invoice> items)
+        public Task<IEnumerable<Invoice>> CreateAsync(IEnumerable<Invoice> items)
         {
-            return Invoices.Create(items);
+            return Invoices.CreateAsync(items);
         }
 
-        public IEnumerable<Contact> Create(IEnumerable<Contact> items)
+        public Task<IEnumerable<Contact>> CreateAsync(IEnumerable<Contact> items)
         {
-            return Contacts.Create(items);
+            return Contacts.CreateAsync(items);
         }
         
-        public IEnumerable<Account> Create(IEnumerable<Account> items)
+        public Task<IEnumerable<Account>> CreateAsync(IEnumerable<Account> items)
         {
-            return Accounts.Create(items);
+            return Accounts.CreateAsync(items);
         }
 
-        public IEnumerable<Employee> Create(IEnumerable<Employee> items)
+        public Task<IEnumerable<Employee>> CreateAsync(IEnumerable<Employee> items)
         {
-            return Employees.Create(items);
+            return Employees.CreateAsync(items);
         }
 
-        public IEnumerable<ExpenseClaim> Create(IEnumerable<ExpenseClaim> items)
+        public Task<IEnumerable<ExpenseClaim>> CreateAsync(IEnumerable<ExpenseClaim> items)
         {
-            return ExpenseClaims.Create(items);
+            return ExpenseClaims.CreateAsync(items);
         }
 
-        public IEnumerable<Receipt> Create(IEnumerable<Receipt> items)
+        public Task<IEnumerable<Receipt>> CreateAsync(IEnumerable<Receipt> items)
         {
-            return Receipts.Create(items);
+            return Receipts.CreateAsync(items);
         }
 
-        public IEnumerable<CreditNote> Create(IEnumerable<CreditNote> items)
+        public Task<IEnumerable<CreditNote>> CreateAsync(IEnumerable<CreditNote> items)
         {
-            return CreditNotes.Create(items);
+            return CreditNotes.CreateAsync(items);
         }
 
-        public IEnumerable<Item> Create(IEnumerable<Item> items)
+        public Task<IEnumerable<Item>> CreateAsync(IEnumerable<Item> items)
         {
-            return Items.Create(items);
+            return Items.CreateAsync(items);
         }
 
-        public IEnumerable<ManualJournal> Create(IEnumerable<ManualJournal> items)
+        public Task<IEnumerable<ManualJournal>> CreateAsync(IEnumerable<ManualJournal> items)
         {
-            return ManualJournals.Create(items);
+            return ManualJournals.CreateAsync(items);
         }
 
-        public IEnumerable<Payment> Create(IEnumerable<Payment> items)
+        public Task<IEnumerable<Payment>> CreateAsync(IEnumerable<Payment> items)
         {
-            return Payments.Create(items);
+            return Payments.CreateAsync(items);
         }
 
-        public IEnumerable<TaxRate> Create(IEnumerable<TaxRate> items)
+        public Task<IEnumerable<TaxRate>> CreateAsync(IEnumerable<TaxRate> items)
         {
-            return TaxRates.Create(items);
+            return TaxRates.CreateAsync(items);
         }
 
-        public IEnumerable<BankTransaction> Create(IEnumerable<BankTransaction> items)
+        public Task<IEnumerable<BankTransaction>> CreateAsync(IEnumerable<BankTransaction> items)
         {
-            return BankTransactions.Create(items);
+            return BankTransactions.CreateAsync(items);
         }
 
-        public IEnumerable<BankTransfer> Create(IEnumerable<BankTransfer> items)
+        public Task<IEnumerable<BankTransfer>> CreateAsync(IEnumerable<BankTransfer> items)
         {
-            return BankTransfers.Create(items);
+            return BankTransfers.CreateAsync(items);
         }
 
-        public Invoice Create(Invoice item)
+        public Task<Invoice> CreateAsync(Invoice item)
         {
-            return Invoices.Create(item);
+            return Invoices.CreateAsync(item);
         }
 
-        public Contact Create(Contact item)
+        public Task<Contact> CreateAsync(Contact item)
         {
-            return Contacts.Create(item);
+            return Contacts.CreateAsync(item);
         }
 
-        public Account Create(Account item)
+        public Task<Account> CreateAsync(Account item)
         {
-            return Accounts.Create(item);
+            return Accounts.CreateAsync(item);
         }
 
-        public Employee Create(Employee item)
+        public Task<Employee> CreateAsync(Employee item)
         {
-            return Employees.Create(item);
+            return Employees.CreateAsync(item);
         }
 
-        public ExpenseClaim Create(ExpenseClaim item)
+        public Task<ExpenseClaim> CreateAsync(ExpenseClaim item)
         {
-            return ExpenseClaims.Create(item);
+            return ExpenseClaims.CreateAsync(item);
         }
 
-        public Receipt Create(Receipt item)
+        public Task<Receipt> CreateAsync(Receipt item)
         {
-            return Receipts.Create(item);
+            return Receipts.CreateAsync(item);
         }
 
-        public CreditNote Create(CreditNote item)
+        public Task<CreditNote> CreateAsync(CreditNote item)
         {
-            return CreditNotes.Create(item);
+            return CreditNotes.CreateAsync(item);
         }
 
-        public Item Create(Item item)
+        public Task<Item> CreateAsync(Item item)
         {
-            return Items.Create(item);
+            return Items.CreateAsync(item);
         }
 
-        public ManualJournal Create(ManualJournal item)
+        public Task<ManualJournal> CreateAsync(ManualJournal item)
         {
-            return ManualJournals.Create(item);
+            return ManualJournals.CreateAsync(item);
         }
 
-        public Payment Create(Payment item)
+        public Task<Payment> CreateAsync(Payment item)
         {
-            return Payments.Create(item);
+            return Payments.CreateAsync(item);
         }
 
-        public TaxRate Create(TaxRate item)
+        public Task<TaxRate> CreateAsync(TaxRate item)
         {
-            return TaxRates.Create(item);
+            return TaxRates.CreateAsync(item);
         }
 
-        public BankTransaction Create(BankTransaction item)
+        public Task<BankTransaction> CreateAsync(BankTransaction item)
         {
-            return BankTransactions.Create(item);
+            return BankTransactions.CreateAsync(item);
         }
 
-        public BankTransfer Create(BankTransfer item)
+        public Task<BankTransfer> CreateAsync(BankTransfer item)
         {
-            return BankTransfers.Create(item);
+            return BankTransfers.CreateAsync(item);
         }
 
-        public ImportSummary Create(Setup item)
+        public Task<ImportSummary> CreateAsync(Setup item)
         {
-            return Setup.Create(item);
+            return Setup.CreateAsync(item);
         }
 
-        public Invoice Update(Invoice item)
+        public Task<Invoice> UpdateAsync(Invoice item)
         {
-            return Invoices.Update(item);
+            return Invoices.UpdateAsync(item);
         }
 
-        public Contact Update(Contact item)
+        public Task<Contact> UpdateAsync(Contact item)
         {
-            return Contacts.Update(item);
+            return Contacts.UpdateAsync(item);
         }
 
-        public ContactGroup Update(ContactGroup item)
+        public Task<ContactGroup> UpdateAsync(ContactGroup item)
         {
-            return ContactGroups.Update(item);
+            return ContactGroups.UpdateAsync(item);
         }
 
-        public Employee Update(Employee item)
+        public Task<Employee> UpdateAsync(Employee item)
         {
-            return Employees.Update(item);
+            return Employees.UpdateAsync(item);
         }
 
-        public ExpenseClaim Update(ExpenseClaim item)
+        public Task<ExpenseClaim> UpdateAsync(ExpenseClaim item)
         {
-            return ExpenseClaims.Update(item);
+            return ExpenseClaims.UpdateAsync(item);
         }
 
-        public Receipt Update(Receipt item)
+        public Task<Receipt> UpdateAsync(Receipt item)
         {
-            return Receipts.Update(item);
+            return Receipts.UpdateAsync(item);
         }
 
-        public CreditNote Update(CreditNote item)
+        public Task<CreditNote> UpdateAsync(CreditNote item)
         {
-            return CreditNotes.Update(item);
+            return CreditNotes.UpdateAsync(item);
         }
 
-        public Item Update(Item item)
+        public Task<Item> UpdateAsync(Item item)
         {
-            return Items.Update(item);
+            return Items.UpdateAsync(item);
         }
 
-        public ManualJournal Update(ManualJournal item)
+        public Task<ManualJournal> UpdateAsync(ManualJournal item)
         {
-            return ManualJournals.Update(item);
+            return ManualJournals.UpdateAsync(item);
         }
 
-        public BankTransaction Update(BankTransaction item)
+        public Task<BankTransaction> UpdateAsync(BankTransaction item)
         {
-            return BankTransactions.Update(item);
+            return BankTransactions.UpdateAsync(item);
         }
 
-        public BankTransfer Update(BankTransfer item)
+        public Task<BankTransfer> UpdateAsync(BankTransfer item)
         {
-            return BankTransfers.Update(item);
+            return BankTransfers.UpdateAsync(item);
         }
 
-        public TaxRate Update(TaxRate item)
+        public Task<TaxRate> UpdateAsync(TaxRate item)
         {
-            return TaxRates.Update(item);
+            return TaxRates.UpdateAsync(item);
         }
 
-        public ImportSummary Update(Setup item)
+        public Task<ImportSummary> UpdateAsync(Setup item)
         {
-            return Setup.Update(item);
+            return Setup.UpdateAsync(item);
         }
 
-        public TrackingCategory Update(TrackingCategory item)
+        public Task<TrackingCategory> UpdateAsync(TrackingCategory item)
         {
-            return TrackingCategories.Update(item);
+            return TrackingCategories.UpdateAsync(item);
         }
         
     }

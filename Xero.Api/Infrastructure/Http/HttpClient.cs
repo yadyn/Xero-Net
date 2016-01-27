@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading.Tasks;
 using Xero.Api.Infrastructure.Interfaces;
 using Xero.Api.Infrastructure.RateLimiter;
 
@@ -60,105 +61,114 @@ namespace Xero.Api.Infrastructure.Http
             set;
         }
 
-        public Response Post(string endpoint, string data, string contentType = "application/xml", string query = null)
+        public Task<Response> PostAsync(string endpoint, string data, string contentType = "application/xml", string query = null)
         {
-            return Post(endpoint, Encoding.UTF8.GetBytes(data), contentType, query);
+            return PostAsync(endpoint, Encoding.UTF8.GetBytes(data), contentType, query);
         }
         
-        public Response Post(string endpoint, byte[] data, string contentType = "application/xml", string query = null)
+        public Task<Response> PostAsync(string endpoint, byte[] data, string contentType = "application/xml", string query = null)
         {
             try
             {
-                return WriteToServer(endpoint, data, "POST", contentType, query);
+                return WriteToServerAsync(endpoint, data, "POST", contentType, query);
             }
             catch (WebException we)
             {
-	            if (we.Response != null)
-	            {
-		            return new Response((HttpWebResponse) we.Response);
-	            }
+                if (we.Response != null)
+                {
+                    return Task.FromResult(new Response(we.Response as HttpWebResponse));
+                }
 
-	            throw;
+                throw;
             }
         }
             
-        public Response PostMultipartForm(string endpoint, string contentType, string name, string filename, byte[] payload)
+        public Task<Response> PostMultipartFormAsync(string endpoint, string contentType, string name, string filename, byte[] payload)
         {
-            return WriteToServerWithMultipart(endpoint, contentType, name,filename, payload);
+            return WriteToServerWithMultipartAsync(endpoint, contentType, name,filename, payload);
         }
 
-        public Response Put(string endpoint, string data, string contentType = "application/xml", string query = null)
-        {
-            try
-            {
-                return WriteToServer(endpoint, Encoding.UTF8.GetBytes(data), "PUT", contentType, query);
-            }
-            catch (WebException we)
-            {
-	            if (we.Response != null)
-	            {
-		            return new Response((HttpWebResponse) we.Response);
-	            }
-
-	            throw;
-            }
-        }
-
-        public Response Get(string endpoint, string query)
+        public Task<Response> PutAsync(string endpoint, string data, string contentType = "application/xml", string query = null)
         {
             try
             {
-                var request = CreateRequest(endpoint, "GET", query: query);
-                return new Response((HttpWebResponse)request.GetResponse());
+                return WriteToServerAsync(endpoint, Encoding.UTF8.GetBytes(data), "PUT", contentType, query);
             }
             catch (WebException we)
             {
-	            if (we.Response != null)
-	            {
-		            return new Response((HttpWebResponse) we.Response);
-	            }
+                if (we.Response != null)
+                {
+                    return Task.FromResult(new Response(we.Response as HttpWebResponse));
+                }
 
-	            throw;
+                throw;
             }
         }
 
-        public Response GetRaw(string endpoint, string mimeType, string query = null)
+        public async Task<Response> GetAsync(string endpoint, string query)
         {
             try
             {
-                var request = CreateRequest(endpoint, "GET", mimeType, query);
-                return new Response((HttpWebResponse)request.GetResponse());
+                var request = await CreateRequestAsync(endpoint, "GET", query: query);
+
+                var response = await request.GetResponseAsync();
+
+                return new Response(response as HttpWebResponse);
             }
             catch (WebException we)
             {
-	            if (we.Response != null)
-	            {
-		            return new Response((HttpWebResponse) we.Response);
-	            }
+                if (we.Response != null)
+                {
+                    return new Response(we.Response as HttpWebResponse);
+                }
 
-	            throw;
+                throw;
             }
         }
 
-        public Response Delete(string endpoint)
+        public async Task<Response> GetRawAsync(string endpoint, string mimeType, string query = null)
         {
-	        try
-	        {
-		        var request = CreateRequest(endpoint, "DELETE");
-		        return new Response((HttpWebResponse) request.GetResponse());
-	        }
-	        catch (WebException we)
-	        {
-		        if (we.Response != null)
-		        {
-			        return new Response((HttpWebResponse) we.Response);
-			}
+            try
+            {
+                var request = await CreateRequestAsync(endpoint, "GET", mimeType, query);
 
-		        throw;
-	        }
+                var response = await request.GetResponseAsync();
+
+                return new Response(response as HttpWebResponse);
+            }
+            catch (WebException we)
+            {
+                if (we.Response != null)
+                {
+                    return new Response(we.Response as HttpWebResponse);
+                }
+
+                throw;
+            }
         }
 
-        private HttpWebRequest CreateRequest(string endPoint, string method, string accept = "application/json", string query = null)
+        public async Task<Response> DeleteAsync(string endpoint)
+        {
+            try
+            {
+                var request = await CreateRequestAsync(endpoint, "DELETE");
+
+                var response = await request.GetResponseAsync();
+
+                return new Response(response as HttpWebResponse);
+            }
+            catch (WebException we)
+            {
+                if (we.Response != null)
+                {
+                    return new Response(we.Response as HttpWebResponse);
+            }
+
+                throw;
+            }
+        }
+
+        private async Task<HttpWebRequest> CreateRequestAsync(string endPoint, string method, string accept = "application/json", string query = null)
         {
             var uri = new UriBuilder(_baseUri)
             {
@@ -184,7 +194,7 @@ namespace Xero.Api.Infrastructure.Http
 
             if (_auth != null)
             {
-                var oauthSignature = _auth.GetSignature(Consumer, User, request.RequestUri, method, Consumer);
+                var oauthSignature = await _auth.GetSignatureAsync(Consumer, User, request.RequestUri, method, Consumer);
 
                 AddHeader("Authorization", oauthSignature);
             }
@@ -228,13 +238,15 @@ namespace Xero.Api.Infrastructure.Http
             }
         }
 
-        private Response WriteToServerWithMultipart(string endpoint,string contentType, string name, string filename ,byte[] payload)
+        private async Task<Response> WriteToServerWithMultipartAsync(string endpoint,string contentType, string name, string filename ,byte[] payload)
         {
-            var request = CreateRequest(endpoint, "POST");
+            var request = await CreateRequestAsync(endpoint, "POST");
 
             WriteMultipartData(payload, request, contentType,name, filename);
-            
-            return new Response((HttpWebResponse)request.GetResponse());
+
+            var response = await request.GetResponseAsync();
+
+            return new Response(response as HttpWebResponse);
         }
 
         private void WriteMultipartData(byte[] bytes, HttpWebRequest request, string contentType, string name, string filename)
@@ -258,12 +270,14 @@ namespace Xero.Api.Infrastructure.Http
             dataStream.Close();
         }
 
-        private Response WriteToServer(string endpoint, byte[] data, string method, string contentType = "application/xml", string query = null)
+        private async Task<Response> WriteToServerAsync(string endpoint, byte[] data, string method, string contentType = "application/xml", string query = null)
         {
-            var request = CreateRequest(endpoint, method, query: query);
+            var request = await CreateRequestAsync(endpoint, method, query: query);
             WriteData(data, request, contentType);
 
-            return new Response((HttpWebResponse)request.GetResponse());
-        }        
+            var response = await request.GetResponseAsync();
+
+            return new Response(response as HttpWebResponse);
+        }
     }
 }

@@ -14,7 +14,7 @@ namespace CoreTests.Integration.Items.TrackedItems
             Given_an_inventory_account();
             Given_a_direct_cost_account();
 
-            var item = Api.Items.Create(new Item
+            var item = Api.Items.CreateAsync(new Item
             {
                 Code = "Tracked Item " + Random.GetRandomString(10),
                 InventoryAssetAccountCode = InventoryAccountCode,
@@ -38,7 +38,7 @@ namespace CoreTests.Integration.Items.TrackedItems
 
             var code = "Tracked Item " + Random.GetRandomString(10);
 
-            var item = Api.Items.Create(new Item
+            var item = Api.Items.CreateAsync(new Item
             {
                 Code = code,
                 Description = "Sell me",

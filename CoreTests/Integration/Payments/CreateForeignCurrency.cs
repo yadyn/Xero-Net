@@ -30,7 +30,7 @@ namespace CoreTests.Integration.Payments
             var date = DateTime.UtcNow;
             const string reference = "Full refund as we couldn't replace item";
 
-            var payment = Api.Create(new Payment
+            var payment = Api.CreateAsync(new Payment
             {
                 CreditNote = new CreditNote { Number = note.Number },
                 Account = new Account { Code = Foreign.Code },
@@ -49,13 +49,13 @@ namespace CoreTests.Integration.Payments
             return Api.Accounts
                 .Where("Type == \"BANK\"")
                 .And("CurrencyCode != \"NZD\"")
-                .Find().FirstOrDefault() ??
+                .FindAsync().FirstOrDefault() ??
                    Create_foreign_currency_account();
         }
 
         private Account Create_foreign_currency_account()
         {
-            return Api.Create(new Account
+            return Api.CreateAsync(new Account
             {
                 Code = Random.GetRandomString(10),
                 Name = "Foreign Currency",

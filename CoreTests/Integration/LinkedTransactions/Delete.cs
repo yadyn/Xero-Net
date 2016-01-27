@@ -12,10 +12,10 @@ namespace CoreTests.Integration.LinkedTransactions
 
             var id = LinkedTransactionId;
 
-            Api.LinkedTransactions.Delete(LinkedTransaction);
+            Api.LinkedTransactions.DeleteAsync(LinkedTransaction);
 
             //After deleting the linked transaction, it no longer exists so we exopect to get a 404 NotFound when looking for it.
-            Assert.Throws<NotFoundException>(() => Api.LinkedTransactions.Find(id));
+            Assert.Throws<NotFoundException>(() => Api.LinkedTransactions.FindAsync(id));
         }
     }
 }

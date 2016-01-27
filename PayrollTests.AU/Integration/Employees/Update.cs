@@ -16,7 +16,7 @@ namespace PayrollTests.AU.Integration.Employees
         {
             var emp = Given_an_employee(false);
 
-            var updated_emp = Api.Update(new Employee
+            var updated_emp = Api.UpdateAsync(new Employee
             {
                 Id = emp.Id,
                 SuperMemberships = new List<SuperMembership>
