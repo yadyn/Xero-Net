@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using Xero.Api.Core.Model;
 using Xero.Api.Core.Model.Status;
@@ -12,43 +13,43 @@ namespace CoreTests.Integration.Invoices
     public class Create : InvoicesTest
     {
         [Test]
-        public void simple_create_works()
+        public async Task simple_create_works()
         {
-            var invoice = Given_an_invoice();
+            var invoice = await Given_an_invoice();
 
             Assert.True(invoice.Id != Guid.Empty);
         }
 
         [Test]
-        public void description_only_items_work()
+        public async Task description_only_items_work()
         {
             const InvoiceType expected = InvoiceType.AccountsPayable;
-            var type = Given_a_description_only_invoice().Type;
+            var type = (await Given_a_description_only_invoice()).Type;
 
             Assert.AreEqual(expected, type);
         }
 
         [Test]
-        public void accounts_receivable()
+        public async Task accounts_receivable()
         {
             const InvoiceType expected = InvoiceType.AccountsReceivable;
-            var type = Given_a_description_only_invoice(expected).Type;
+            var type = (await Given_a_description_only_invoice(expected)).Type;
 
             Assert.AreEqual(expected, type);
         }
 
         [Test]
-        public void lineItemId_is_returned()
+        public async Task lineItemId_is_returned()
         {
-            var invoce = Given_an_invoice();
+            var invoce = await Given_an_invoice();
 
             Assert.NotNull(invoce.LineItems.FirstOrDefault().LineItemId);
         }
 
         [Test]
-        public void multiple_lineitems()
+        public async Task multiple_lineitems()
         {
-            var invoice = Api.CreateAsync(new Invoice
+            var invoice = await Api.CreateAsync(new Invoice
             {
                 Contact = new Contact { Name = "ABC Limited" },
                 Type = InvoiceType.AccountsReceivable,
@@ -73,13 +74,13 @@ namespace CoreTests.Integration.Invoices
 
             Assert.True(invoice.Id != Guid.Empty);
             Assert.AreEqual(InvoiceType.AccountsReceivable, invoice.Type);
-			Assert.AreEqual(2, invoice.LineItems.Count());
+            Assert.AreEqual(2, invoice.LineItems.Count());
         }
 
         [Test]
-        public void multiple_invoices()
+        public async Task multiple_invoices()
         {
-            var invoices = Api.CreateAsync(new[]
+            var invoices = (await Api.CreateAsync(new[]
             {
                 new Invoice
                 {
@@ -111,21 +112,21 @@ namespace CoreTests.Integration.Invoices
                         }
                     }
                 }
-            }).ToList();
+            })).ToList();
 
             Assert.AreEqual(2, invoices.Count());
             Assert.AreEqual(2, invoices.Select(p => p.Id).Count());
         }
 
         [Test]
-        public void high_precision_unit()
+        public async Task high_precision_unit()
         {
-            var invoice = Api.CreateAsync(
+            var invoice = await Api.CreateAsync(
                 new Invoice
                 {
                     Contact = new Contact { Name = "ABC Limited" },
                     Type = InvoiceType.AccountsReceivable,
-					LineItems = new List<LineItem>
+                    LineItems = new List<LineItem>
                     {
                         new LineItem
                         {
@@ -137,13 +138,13 @@ namespace CoreTests.Integration.Invoices
                     }
                 });
 
-			Assert.AreEqual(25.6591m, invoice.LineItems.First().UnitAmount);
+            Assert.AreEqual(25.6591m, invoice.LineItems.First().UnitAmount);
         }
 
         [Test]
-        public void low_precision_unit()
+        public async Task low_precision_unit()
         {
-            var invoices = Api.Invoices.UseFourDecimalPlaces(false).CreateAsync(new[]
+            var invoices = (await Api.Invoices.UseFourDecimalPlaces(false).CreateAsync(new[]
             {
                 new Invoice
                 {
@@ -160,13 +161,13 @@ namespace CoreTests.Integration.Invoices
                         }
                     }
                 }                
-            }).ToList();
+            })).ToList();
 
-			Assert.AreEqual(25.66m, invoices.First().LineItems.First().UnitAmount);
+            Assert.AreEqual(25.66m, invoices.First().LineItems.First().UnitAmount);
         }
 
         [Test]
-        public void full_example_line_items_with_tracking_categories()
+        public async Task full_example_line_items_with_tracking_categories()
         {
             const string name = "Region";
             const string option = "North";
@@ -178,7 +179,7 @@ namespace CoreTests.Integration.Invoices
             var paymentDate = DateTime.Now.AddDays(20).Date;
             var reference = "Ref:" + Random.GetRandomString(10);
             
-            var invoices = Api.Invoices.CreateAsync(new[]
+            var invoices = (await Api.Invoices.CreateAsync(new[]
             {
                 new Invoice
                 {
@@ -228,13 +229,13 @@ namespace CoreTests.Integration.Invoices
                         }
                     }
                 }                
-            }).ToList();
+            })).ToList();
 
-            var invoice = Api.Invoices.Find(invoices.First().Id);
+            var invoice = await Api.Invoices.FindAsync(invoices.First().Id);
 
-			Assert.AreEqual(category, invoice.LineItems.First().Tracking[0].Id);
-			Assert.AreEqual(name, invoice.LineItems.First().Tracking[0].Name);
-			Assert.AreEqual(option, invoice.LineItems.First().Tracking[0].Option);
+            Assert.AreEqual(category, invoice.LineItems.First().Tracking[0].Id);
+            Assert.AreEqual(name, invoice.LineItems.First().Tracking[0].Name);
+            Assert.AreEqual(option, invoice.LineItems.First().Tracking[0].Option);
             Assert.AreEqual(dueDate, invoice.DueDate);
             Assert.AreEqual(paymentDate, invoice.ExpectedPaymentDate);
             Assert.AreEqual(reference, invoice.Reference);
@@ -243,12 +244,12 @@ namespace CoreTests.Integration.Invoices
         }
 
         [Test]
-        public void lineitems_without_account_code()
+        public async Task lineitems_without_account_code()
         {
-            var item = Api.Items
+            var item = (await Api.Items
                 .Where("Code.StartsWith(\"Woo-hoo\")")
                 .And("Description != null")
-                .FindAsync()
+                .FindAsync())
                 .FirstOrDefault();
 
             if (item == null)
@@ -256,11 +257,11 @@ namespace CoreTests.Integration.Invoices
                 Assert.False(false, "No items");
             }
 
-            var invoice = Api.CreateAsync(new Invoice
+            var invoice = await Api.CreateAsync(new Invoice
             {
                 Contact = new Contact { Name = "ABC Limited" },
                 Type = InvoiceType.AccountsReceivable,
-				LineItems = new List<LineItem>
+                LineItems = new List<LineItem>
                 {
                     new LineItem
                     {
@@ -272,7 +273,7 @@ namespace CoreTests.Integration.Invoices
 
             Assert.True(invoice.Id != Guid.Empty);
             Assert.AreEqual(InvoiceType.AccountsReceivable, invoice.Type);
-			Assert.AreEqual(1, invoice.LineItems.Count());
+            Assert.AreEqual(1, invoice.LineItems.Count());
         }
     }
 }

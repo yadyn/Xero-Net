@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xero.Api.Core.Model;
 using Xero.Api.Core.Model.Types;
 
@@ -10,21 +11,21 @@ namespace CoreTests.Integration.ManualJournals
         protected Account Sales { get; private set; }
         protected Account Revenue { get; private set; }
         
-        protected void ManualJournalsSetUp()
+        protected async Task ManualJournalsSetUp()
         {
-            SetUp();
-            Sales = Given_an_account();
-            Revenue = Given_an_account(AccountType.Revenue);
+            await SetUp();
+            Sales = await Given_an_account();
+            Revenue = await Given_an_account(AccountType.Revenue);
         }
 
-        private Account Given_an_account(AccountType type = AccountType.Sales)
+        private async Task<Account> Given_an_account(AccountType type = AccountType.Sales)
         {
-            return Api.Accounts
+            return (await Api.Accounts
                 .Where(string.Format("Type == \"{0}\"", type.ToString().ToUpper()))
-                .FindAsync()
+                .FindAsync())
                 .FirstOrDefault() ??
 
-                Api.CreateAsync(new Account
+                await Api.CreateAsync(new Account
                 {
                     Name = Random.GetRandomString(20),
                     Code = Random.GetRandomString(10),
@@ -32,7 +33,7 @@ namespace CoreTests.Integration.ManualJournals
                 });
         }
 
-        protected ManualJournal Given_a_manual_journal(string narration, decimal amount)
+        protected Task<ManualJournal> Given_a_manual_journal(string narration, decimal amount)
         {
             return Api.CreateAsync(new ManualJournal
             {

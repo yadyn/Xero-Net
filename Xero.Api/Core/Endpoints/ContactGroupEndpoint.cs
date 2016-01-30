@@ -34,7 +34,7 @@ namespace Xero.Api.Core.Endpoints
         //    }
         //}
 
-        public async Task<ContactCollection> GetAsync(Guid guid)
+        public async Task<ContactCollection> GetContactsAsync(Guid guid)
         {
             var endpoint = string.Format("/api.xro/2.0/ContactGroups/{0}", guid);
 

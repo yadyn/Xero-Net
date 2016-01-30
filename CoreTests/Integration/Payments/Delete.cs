@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using Xero.Api.Core.Model;
 using Xero.Api.Core.Model.Status;
@@ -8,24 +9,20 @@ namespace CoreTests.Integration.Payments
     [TestFixture]
     public class Delete : PaymentsTest
     {
-        [TestFixtureSetUp]
-        public void CreatePaymentsSetUp()
-        {
-            SetUp();
-        }
-
         [Test]
-        public void can_delete_payments()
+        public async Task can_delete_payments()
         {
+            await SetUp();
+
             var date = DateTime.UtcNow;
             const decimal expected = 32.6m;
             const decimal invoiceAmount = 100;
 
-            var payment = Given_a_payment(invoiceAmount, date, expected);
+            var payment = await Given_a_payment(invoiceAmount, date, expected);
 
-            Given_this_payment_is_deleted(payment);
+            await Given_this_payment_is_deleted(payment);
 
-            var found = Api.Payments.FindAsync(payment.Id);
+            var found = await Api.Payments.FindAsync(payment.Id);
 
             Assert.True(found.Status == PaymentStatus.Deleted);
         }

@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using CoreTests.Integration.Files.Support;
 using NUnit.Framework;
 using Xero.Api.Core.Model;
@@ -9,11 +10,10 @@ namespace CoreTests.Integration.Files.Inbox
     [TestFixture]
     public class InboxTest : FilesTest
     {
-
         [Test]
-        public void can_get_the_inbox_like_this()
+        public async Task can_get_the_inbox_like_this()
         {
-            var inbox = Api.Inbox.GetInboxFolderAsync;
+            var inbox = await Api.Inbox.GetInboxFolderAsync();
 
             Assert.IsTrue(inbox.Name == "Inbox");
 
@@ -21,35 +21,31 @@ namespace CoreTests.Integration.Files.Inbox
         }
 
         [Test]
-        public void can_add_a_file_to_inbox_like_this()
+        public async Task can_add_a_file_to_inbox_like_this()
         {
             var filename = "Inbox file " + Guid.NewGuid() + ".png";
 
-            var result = Api.Inbox.AddAsync(create_file_with_name(filename), exampleFile);
+            var result = await Api.Inbox.AddAsync(create_file_with_name(filename), exampleFile);
 
-            var file = Api.Files[result.Id];
+            var file = await Api.Files.FindAsync(result.Id);
 
             Assert.IsTrue(file.Mimetype == "image/png");
             Assert.IsTrue(file.Name == filename);
-
         }
 
         [Test]
-        public void can_remove_a_file_like_this()
+        public async Task can_remove_a_file_like_this()
         {
-            var inboxId = Api.Inbox.GetInboxFolderAsync.Id;
+            var inboxId = (await Api.Inbox.GetInboxFolderAsync()).Id;
 
-            var result = Given_a_file_in(inboxId, "Test " + Guid.NewGuid() + ".png");
+            var result = await Given_a_file_in(inboxId, "Test " + Guid.NewGuid() + ".png");
 
-            Api.Inbox.RemoveAsync(result);
-
-            var notfound = Api.Inbox[result];
+            await Api.Inbox.RemoveAsync(result);
+            
+            var notfound = await Api.Inbox.FindAsync(result);
 
             Assert.IsNull(notfound);
-
         }
-
-       
 
         private File create_file_with_name(string filename)
         {
@@ -67,7 +63,5 @@ namespace CoreTests.Integration.Files.Inbox
                 }
             };
         }
-
-
     }
 }

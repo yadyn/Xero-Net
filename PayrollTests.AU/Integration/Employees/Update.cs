@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using Xero.Api.Payroll.Australia.Model;
 using Xero.Api.Payroll.Australia.Model.Types;
@@ -12,18 +13,18 @@ namespace PayrollTests.AU.Integration.Employees
     public class Update : EmployeesTest
     {
         [Test]
-        public void update_employee_with_super_memberhsip()
+        public async Task update_employee_with_super_memberhsip()
         {
-            var emp = Given_an_employee(false);
+            var emp = await Given_an_employee(false);
 
-            var updated_emp = Api.UpdateAsync(new Employee
+            var updated_emp = await Api.UpdateAsync(new Employee
             {
                 Id = emp.Id,
                 SuperMemberships = new List<SuperMembership>
                 {
                     new SuperMembership
                     {
-                        SuperFundId = super_fund_id(),
+                        SuperFundId = await super_fund_id(),
                         EmployeeNumber = 3424232
                     }
                 }

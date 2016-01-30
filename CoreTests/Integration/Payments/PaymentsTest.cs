@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xero.Api.Core.Model;
 using Xero.Api.Core.Model.Status;
 using Xero.Api.Core.Model.Types;
@@ -8,14 +9,16 @@ namespace CoreTests.Integration.Payments
 {
     public abstract class PaymentsTest : ApiWrapperTest
     {
-        protected Payment Given_a_payment(decimal invoiceAmount, DateTime date, decimal amount, bool isReconciled = false)
+        protected async Task<Payment> Given_a_payment(decimal invoiceAmount, DateTime date, decimal amount, bool isReconciled = false)
         {
-            return Api.CreateAsync(CreatePayment(invoiceAmount, date, amount, isReconciled));
+            var payment = await CreatePayment(invoiceAmount, date, amount, isReconciled);
+
+            return await Api.CreateAsync(payment);
         }
 
-        protected Payment CreatePayment(decimal invoiceAmount, DateTime date, decimal amount, bool isReconciled = false)
+        protected async Task<Payment> CreatePayment(decimal invoiceAmount, DateTime date, decimal amount, bool isReconciled = false)
         {
-            var invoice = Given_an_invoice(invoiceAmount, Account.Code);
+            var invoice = await Given_an_invoice(invoiceAmount, Account.Code);
             var bankCode = BankAccount.Code;
 
             var payment = new Payment
@@ -34,7 +37,7 @@ namespace CoreTests.Integration.Payments
             return payment;
         }
 
-        private Invoice Given_an_invoice(decimal amount = 100m, string accountCode = "100")
+        private Task<Invoice> Given_an_invoice(decimal amount = 100m, string accountCode = "100")
         {
             return Api.CreateAsync(new Invoice
             {
@@ -45,7 +48,7 @@ namespace CoreTests.Integration.Payments
                 DueDate = DateTime.UtcNow.AddDays(90),
                 LineAmountTypes = LineAmountType.Inclusive,
                 Status = InvoiceStatus.Authorised,
-				LineItems = new List<LineItem>
+                LineItems = new List<LineItem>
                 {
                     new LineItem
                     {
@@ -57,7 +60,7 @@ namespace CoreTests.Integration.Payments
             });
         }
 
-        protected CreditNote Given_an_credit_note(decimal amount = 100m, string accountCode = "100")
+        protected Task<CreditNote> Given_an_credit_note(decimal amount = 100m, string accountCode = "100")
         {
             return Api.CreateAsync(new CreditNote
             {
@@ -80,7 +83,7 @@ namespace CoreTests.Integration.Payments
             });
         }
 
-        protected BankTransaction Given_a_prepayment(string bankAccountCode, decimal amount = 100m, string accountCode = "100")
+        protected Task<BankTransaction> Given_a_prepayment(string bankAccountCode, decimal amount = 100m, string accountCode = "100")
         {
             return Api.CreateAsync(new BankTransaction
             {
@@ -103,7 +106,7 @@ namespace CoreTests.Integration.Payments
             });
         }
 
-        protected BankTransaction Given_an_overpayment(string bankAccountCode, decimal amount = 100m, string accountCode = "100")
+        protected Task<BankTransaction> Given_an_overpayment(string bankAccountCode, decimal amount = 100m, string accountCode = "100")
         {
             return Api.CreateAsync(new BankTransaction
             {
@@ -127,11 +130,11 @@ namespace CoreTests.Integration.Payments
             });
         }
 
-        protected void Given_this_payment_is_deleted(Payment payment)
+        protected Task Given_this_payment_is_deleted(Payment payment)
         {
             var deleteThisPayment = new Payment { Status = PaymentStatus.Deleted, Id = payment.Id };
 
-            Api.Payments.UpdateAsync(deleteThisPayment);
+            return Api.Payments.UpdateAsync(deleteThisPayment);
         }
     }
 }

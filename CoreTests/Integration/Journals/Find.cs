@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace CoreTests.Integration.Journals
@@ -7,25 +8,25 @@ namespace CoreTests.Integration.Journals
     public class Find : ApiWrapperTest
     {
         [Test]
-        public void find_journals()
+        public async Task find_journals()
         {
-            var journals = Api.Journals.FindAsync();
+            var journals = await Api.Journals.FindAsync();
 
             Assert.That(journals.Any());
         }
 
         [Test]
-        public void find_journals_offset()
+        public async Task find_journals_offset()
         {
-            var journals = Api.Journals.FindAsync().ToList();
+            var journals = (await Api.Journals.FindAsync()).ToList();
 
             if (journals.Count() == 100)
             {
                 var offset = journals.Max(p => p.Number);
 
-                Assert.That(Api.Journals.Offset(offset)
-                    .FindAsync()
-                    .Any());
+                var moreJournals = await Api.Journals.Offset(offset).FindAsync();
+
+                Assert.That(moreJournals.Any());
             }
         }
     }

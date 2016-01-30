@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xero.Api.Core.Model;
 using Xero.Api.Core.Model.Status;
 using Xero.Api.Core.Model.Types;
@@ -8,17 +9,17 @@ namespace CoreTests.Integration.Invoices
 {
     public abstract class InvoicesTest : ApiWrapperTest
     {
-        public Invoice Given_an_draft_invoice(InvoiceType type = InvoiceType.AccountsPayable)
+        public Task<Invoice> Given_an_draft_invoice(InvoiceType type = InvoiceType.AccountsPayable)
         {
             return Given_an_invoice(type);
         }
 
-        public Invoice Given_an_authorised_invoice(InvoiceType type = InvoiceType.AccountsPayable)
+        public Task<Invoice> Given_an_authorised_invoice(InvoiceType type = InvoiceType.AccountsPayable)
         {
             return Given_an_invoice(type, InvoiceStatus.Authorised);
         }
 
-        public Invoice Given_an_invoice(InvoiceType type = InvoiceType.AccountsPayable, InvoiceStatus status = InvoiceStatus.Draft)
+        public Task<Invoice> Given_an_invoice(InvoiceType type = InvoiceType.AccountsPayable, InvoiceStatus status = InvoiceStatus.Draft)
         {
             return Api.CreateAsync(new Invoice
             {
@@ -28,7 +29,7 @@ namespace CoreTests.Integration.Invoices
                 DueDate = DateTime.UtcNow.AddDays(90),
                 LineAmountTypes = LineAmountType.Inclusive,
                 Status = status,
-				LineItems = new List<LineItem>
+                LineItems = new List<LineItem>
                 {
                     new LineItem
                     {
@@ -41,13 +42,13 @@ namespace CoreTests.Integration.Invoices
             });
         }
 
-        public Invoice Given_a_description_only_invoice(InvoiceType type = InvoiceType.AccountsPayable)
+        public Task<Invoice> Given_a_description_only_invoice(InvoiceType type = InvoiceType.AccountsPayable)
         {
             return Api.CreateAsync(new Invoice
             {
                 Contact = new Contact { Name = "Richard" },
                 Type = type,
-				LineItems = new List<LineItem>
+                LineItems = new List<LineItem>
                 {
                     new LineItem
                     {

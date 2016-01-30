@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace PayrollTests.AU.Integration.LeaveApplications
@@ -10,39 +11,39 @@ namespace PayrollTests.AU.Integration.LeaveApplications
     public class Find : LeaveApplicationTest
     {
         [Test]
-        public void find_all()
+        public async Task find_all()
         {
-            Given_a_leave_application();
-            var la = Api.LeaveApplications.FindAsync();
+            await Given_a_leave_application();
+            var la = await Api.LeaveApplications.FindAsync();
             Assert.IsTrue(la.FirstOrDefault().Id != Guid.Empty);
         }
 
 
         [Test]
-        public void find_by_id()
+        public async Task find_by_id()
         {
-            var the_la_id = Given_a_leave_application().Id;
-            var la = Api.LeaveApplications.FindAsync(the_la_id);
+            var the_la_id = (await Given_a_leave_application()).Id;
+            var la = await Api.LeaveApplications.FindAsync(the_la_id);
             Assert.AreEqual(the_la_id, la.Id);
         }
 
 
         [Test]
-        public void find_by_date()
+        public async Task find_by_date()
         {
-            var the_la = Given_a_leave_application();
+            var the_la = await Given_a_leave_application();
             var start_date = DateTime.Today;
-            var la = Api.LeaveApplications
+            var la = await Api.LeaveApplications
                 .Where(string.Format("StartDate <= DateTime.Parse(\"{0}\")", start_date.ToString("yyyy-MM-dd"))).FindAsync();
             Assert.IsEmpty(la);
 
         }
 
         [Test]
-        public void find_paged()
+        public async Task find_paged()
         {
-            Given_a_leave_application();
-            var la = Api.LeaveApplications.Page(1).FindAsync();
+            await Given_a_leave_application();
+            var la = await Api.LeaveApplications.Page(1).FindAsync();
             Assert.IsTrue(la.FirstOrDefault().Id != Guid.Empty);
         }
     }

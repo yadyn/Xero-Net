@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using System;
 using Xero.Api.Infrastructure.Exceptions;
+using System.Threading.Tasks;
 
 namespace CoreTests.Integration.ContactGroups
 {
@@ -8,22 +9,19 @@ namespace CoreTests.Integration.ContactGroups
     public class Add_Contact : ContactGroupsTest
     {
         [Test]
-        public void Can_I_add_a_contact_to_a_contactgroup()
+        public async Task Can_I_add_a_contact_to_a_contactgroup()
         {
-            var contactgroup = Given_a_contactgroup();
+            var contactgroup = await Given_a_contactgroup();
 
-            Api.ContactGroups[contactgroup.Id].Add(Given_a_contact());
+            var contactGroups = await Api.ContactGroups.GetContactsAsync(contactgroup.Id);
+
+            await contactGroups.AddAsync(await Given_a_contact());
         }
 
         [Test]
         public void But_not_with_a_group_like_this()
         {
-            Assert.Throws<NotFoundException>(() =>
-            {
-                Api.ContactGroups[Guid.Empty].Add(Given_a_contact());
-
-            });
+            Assert.Throws<NotFoundException>(async () => await (await Api.ContactGroups.GetContactsAsync(Guid.Empty)).AddAsync(await Given_a_contact()));
         }
-
     }
 }

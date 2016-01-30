@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using Xero.Api.Core.Model;
 
@@ -6,15 +7,13 @@ namespace CoreTests.Integration.Items.TrackedItems
 {
     public class Create : TrackedInventoryTest
     {
-
-
         [Test]
-        public void Can_create_an_item_with_minimal_properties()
+        public async Task Can_create_an_item_with_minimal_properties()
         {
-            Given_an_inventory_account();
-            Given_a_direct_cost_account();
+            await Given_an_inventory_account();
+            await Given_a_direct_cost_account();
 
-            var item = Api.Items.CreateAsync(new Item
+            var item = await Api.Items.CreateAsync(new Item
             {
                 Code = "Tracked Item " + Random.GetRandomString(10),
                 InventoryAssetAccountCode = InventoryAccountCode,
@@ -30,15 +29,15 @@ namespace CoreTests.Integration.Items.TrackedItems
         }
 
         [Test]
-        public void Can_create_an_item_with_full_details()
+        public async Task Can_create_an_item_with_full_details()
         {
-            Given_an_inventory_account();
-            Given_a_direct_cost_account();
-            Given_a_revenue_account();
+            await Given_an_inventory_account();
+            await Given_a_direct_cost_account();
+            await Given_a_revenue_account();
 
             var code = "Tracked Item " + Random.GetRandomString(10);
 
-            var item = Api.Items.CreateAsync(new Item
+            var item = await Api.Items.CreateAsync(new Item
             {
                 Code = code,
                 Description = "Sell me",
@@ -69,5 +68,4 @@ namespace CoreTests.Integration.Items.TrackedItems
                     code));
         }
     }
-
 }

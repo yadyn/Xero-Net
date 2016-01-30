@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace CoreTests.Integration.Receipts
@@ -7,13 +8,13 @@ namespace CoreTests.Integration.Receipts
     public class Create : ReceiptTest
     {
         [Test]
-        public void create_receipt()
+        public async Task create_receipt()
         {
             var contact = Random.GetRandomString(10);
             var description = Random.GetRandomString(30);
             const decimal value = 13.8m;
 
-            var receipt = Given_a_receipt(Api.Users.FindAsync().First().Id, contact, description, value, "420");
+            var receipt = await Given_a_receipt((await Api.Users.FindAsync()).First().Id, contact, description, value, "420");
 
             Assert.AreEqual(receipt.Total, value);
             Assert.AreEqual(receipt.Contact.Name, contact);

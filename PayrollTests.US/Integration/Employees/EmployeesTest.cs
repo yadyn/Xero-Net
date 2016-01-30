@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Xero.Api.Payroll.America.Model;
 
 namespace PayrollTests.US.Integration.Employees
 {
     public abstract class EmployeesTest : ApiWrapperTest
     {
-        protected Employee Given_an_employee()
+        protected async Task<Employee> Given_an_employee()
         {
-            var employee = Api.CreateAsync(new Employee
+            var employee = await Api.CreateAsync(new Employee
             {
                 FirstName = "John " + Guid.NewGuid().ToString("N"),
                 LastName = "Smith",

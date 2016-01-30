@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using Xero.Api.Payroll.America.Model;
 using Xero.Api.Payroll.America.Model.Types;
@@ -9,9 +10,9 @@ namespace PayrollTests.US.Integration.Employees
     public class Create : EmployeesTest
     {
         [Test]
-        public void create_employee()
+        public async Task create_employee()
         {
-            var emp = Api.CreateAsync(new Employee
+            var emp = await Api.CreateAsync(new Employee
             {
                 FirstName = "John",
                 LastName = "Smith",
@@ -36,9 +37,9 @@ namespace PayrollTests.US.Integration.Employees
         [Test]
         public void create_employee_with_opening_balances()
         {
-            Assert.DoesNotThrow(() =>
+            Assert.DoesNotThrow(async () =>
             {
-                var employee = Api.CreateAsync(new Employee
+                var employee = await Api.CreateAsync(new Employee
                 {
                     FirstName = "John",
                     LastName = "Smith",

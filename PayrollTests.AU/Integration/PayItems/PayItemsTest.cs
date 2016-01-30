@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xero.Api.Payroll.Australia.Model;
 using Xero.Api.Payroll.Australia.Model.Types;
 
@@ -6,7 +7,7 @@ namespace PayrollTests.AU.Integration.PayItems
 {
     public class PayItemsTest : ApiWrapperTest
     {
-        public Xero.Api.Payroll.Australia.Model.PayItems Given_some_payitems()
+        public Task<Xero.Api.Payroll.Australia.Model.PayItems> Given_some_payitems()
         {
             return Api.CreateAsync(new Xero.Api.Payroll.Australia.Model.PayItems
             {

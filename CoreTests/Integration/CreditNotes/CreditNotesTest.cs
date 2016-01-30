@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xero.Api.Core.Model;
 using Xero.Api.Core.Model.Status;
 using Xero.Api.Core.Model.Types;
@@ -8,17 +9,17 @@ namespace CoreTests.Integration.CreditNotes
 {
     public class CreditNotesTest : ApiWrapperTest
     {
-        public CreditNote Given_an_authorised_creditnote(CreditNoteType type = CreditNoteType.AccountsPayable)
+        public Task<CreditNote> Given_an_authorised_creditnote(CreditNoteType type = CreditNoteType.AccountsPayable)
         {
             return Given_a_creditnote(type: type, status: InvoiceStatus.Authorised);
         }
 
-        public CreditNote Given_a_draft_creditnote(CreditNoteType type = CreditNoteType.AccountsPayable)
+        public Task<CreditNote> Given_a_draft_creditnote(CreditNoteType type = CreditNoteType.AccountsPayable)
         {
             return Given_a_creditnote(type: type);
         }
 
-        public CreditNote Given_a_creditnote(string contactName = "Apple Computers Ltd", CreditNoteType type = CreditNoteType.AccountsPayable, InvoiceStatus status = InvoiceStatus.Draft)
+        public Task<CreditNote> Given_a_creditnote(string contactName = "Apple Computers Ltd", CreditNoteType type = CreditNoteType.AccountsPayable, InvoiceStatus status = InvoiceStatus.Draft)
         {
             return Api.CreditNotes.CreateAsync(new CreditNote
             {

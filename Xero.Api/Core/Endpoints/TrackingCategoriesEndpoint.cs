@@ -34,7 +34,7 @@ namespace Xero.Api.Core.Endpoints
         //    {
         //        var endpoint = string.Format("/api.xro/2.0/TrackingCategories/{0}", id);
 
-        //        var trackingCat = HandleResponseAsync(Client.Client.GetAsync(endpoint, null)).TrackingCategories.FirstOrDefault();
+        //        var trackingCat = HandleResponse(Client.Client.GetAsync(endpoint, null)).TrackingCategories.FirstOrDefault();
 
         //        var collection = new OptionCollection(Client, trackingCat);
 
@@ -46,9 +46,20 @@ namespace Xero.Api.Core.Endpoints
         {
             var endpoint = string.Format("/api.xro/2.0/TrackingCategories/{0}", id);
 
-            var trackingCat = (HandleResponse(await Client.Client.GetAsync(endpoint, null))).TrackingCategories.FirstOrDefault();
+            var trackingCat = HandleResponse(await Client.Client.GetAsync(endpoint, null)).TrackingCategories.FirstOrDefault();
 
             return trackingCat;
+        }
+
+        public async Task<OptionCollection> GetOptionsByIDAsync(Guid id)
+        {
+            var endpoint = string.Format("/api.xro/2.0/TrackingCategories/{0}", id);
+
+            var trackingCat = HandleResponse(await Client.Client.GetAsync(endpoint, null)).TrackingCategories.FirstOrDefault();
+
+            var collection = new OptionCollection(Client, trackingCat);
+
+            return collection;
         }
 
         public async Task<List<TrackingCategory>> GetAllAsync()

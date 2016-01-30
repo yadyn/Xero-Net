@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using Xero.Api.Core.Model;
 using Xero.Api.Core.Model.Status;
@@ -10,14 +11,15 @@ namespace CoreTests.Integration.PurchaseOrders
     public class Create : ApiWrapperTest
     {
         [Test]
-        public void Create_minimal_draft_purchase_order()
+        public async Task Create_minimal_draft_purchase_order()
         {
+            var contactId = await GetFirstContactId();
 
-            var purchaseOrder = Api.PurchaseOrders.CreateAsync(
+            var purchaseOrder = await Api.PurchaseOrders.CreateAsync(
                 new PurchaseOrder
                 {
                     Date = DateTime.Today,
-                    Contact = new Contact { Id = ContactId }
+                    Contact = new Contact { Id = contactId }
                 }
             );
 
@@ -26,14 +28,16 @@ namespace CoreTests.Integration.PurchaseOrders
         }
 
         [Test]
-        public void Create_authorised_purchase_order()
+        public async Task Create_authorised_purchase_order()
         {
-            var purchaseOrder = Api.PurchaseOrders.CreateAsync(
+            var contactId = await GetFirstContactId();
+
+            var purchaseOrder = await Api.PurchaseOrders.CreateAsync(
                 new PurchaseOrder
                 {
                     Status = PurchaseOrderStatus.Authorised,
                     Date = DateTime.Today,
-                    Contact = new Contact{Id = ContactId},
+                    Contact = new Contact{Id = contactId },
                     LineItems = new List<LineItem>()
                     {
                         new LineItem
@@ -51,12 +55,9 @@ namespace CoreTests.Integration.PurchaseOrders
             Assert.True(purchaseOrder.Status == PurchaseOrderStatus.Authorised);
         }
 
-        private Guid ContactId
+        private async Task<Guid> GetFirstContactId()
         {
-            get
-            {
-                return Api.Contacts.FindAsync().First().Id;
-            }
+            return (await Api.Contacts.FindAsync()).First().Id;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Xero.Api.Payroll.Australia.Model;
 
 namespace PayrollTests.AU.Integration.LeaveApplications
@@ -7,12 +8,12 @@ namespace PayrollTests.AU.Integration.LeaveApplications
     public abstract class LeaveApplicationTest :ApiWrapperTest
     {
 
-        public LeaveApplication Given_a_leave_application()
+        public async Task<LeaveApplication> Given_a_leave_application()
         {
-            var la = Api.CreateAsync(new LeaveApplication
+            var la = await Api.CreateAsync(new LeaveApplication
             {
-                EmployeeId = Given_an_employee().Id,
-                LeaveTypeId = the_leavetype_id(),
+                EmployeeId = (await Given_an_employee()).Id,
+                LeaveTypeId = await the_leavetype_id(),
                 Title = "Annual",
                 StartDate = DateTime.Today.AddDays(2),
                 EndDate = DateTime.Today.AddDays(4),
@@ -23,14 +24,14 @@ namespace PayrollTests.AU.Integration.LeaveApplications
 
 
 
-        public Employee Given_an_employee()
+        public async Task<Employee> Given_an_employee()
         {
-            var employee = Api.CreateAsync(new Employee
+            var employee = await Api.CreateAsync(new Employee
             {
                 FirstName = "Keith " + Guid.NewGuid().ToString("N"),
                 LastName = "Morgan",
-                PayrollCalendarID = employee_payroll_calendar_id(),
-                OrdinaryEarningsRateID = earning_rates_id()
+                PayrollCalendarID = await employee_payroll_calendar_id(),
+                OrdinaryEarningsRateID = await earning_rates_id()
             });
 
             return employee;
@@ -38,24 +39,24 @@ namespace PayrollTests.AU.Integration.LeaveApplications
 
 
 
-        public Guid the_leavetype_id()
+        public async Task<Guid> the_leavetype_id()
         {
-            return Api.PayItems.FindAsync().FirstOrDefault().LeaveTypes.FirstOrDefault().Id;
+            return (await Api.PayItems.FindAsync()).FirstOrDefault().LeaveTypes.FirstOrDefault().Id;
         }
 
 
 
-        public Guid employee_payroll_calendar_id()
+        public async Task<Guid> employee_payroll_calendar_id()
         {
-            var payruns = Api.PayRuns.Where("PayRunStatus == \"DRAFT\"").FindAsync();
+            var payruns = await Api.PayRuns.Where("PayRunStatus == \"DRAFT\"").FindAsync();
             if (payruns.FirstOrDefault().Id != Guid.Empty)
             {
                 return payruns.FirstOrDefault().PayrollCalendarId;
             }
             else
             {
-                var payroll_calendar_id = Api.PayrollCalendars.FindAsync().First().Id;
-                Api.CreateAsync(new PayRun
+                var payroll_calendar_id = (await Api.PayrollCalendars.FindAsync()).First().Id;
+                await Api.CreateAsync(new PayRun
                 {
                     PayrollCalendarId = payroll_calendar_id
                 });
@@ -65,9 +66,9 @@ namespace PayrollTests.AU.Integration.LeaveApplications
 
 
 
-        public Guid earning_rates_id()
+        public async Task<Guid> earning_rates_id()
         {
-            var er = Api.PayItems.FindAsync();
+            var er = await Api.PayItems.FindAsync();
             return er.FirstOrDefault().EarningsRates.FirstOrDefault().Id;
         }
 

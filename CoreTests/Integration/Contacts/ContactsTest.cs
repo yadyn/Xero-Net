@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Xero.Api.Core.Model;
 using Xero.Api.Core.Model.Status;
 
@@ -10,18 +11,17 @@ namespace CoreTests.Integration.Contacts
         private TrackingCategory trackingCat;
         private bool wasTCCreated = false;
 
-        protected Contact Given_a_contact()
+        protected Task<Contact> Given_a_contact()
         {
-            var contact = Api.CreateAsync(new Contact
+            return Api.CreateAsync(new Contact
             {
                 Name = "Peter " + Random.GetRandomString(10)
             });
-            return contact;
         }
 
-        protected TrackingCategory findOrCreateTC(string OptionName, string TCName)
+        protected async Task<TrackingCategory> findOrCreateTC(string OptionName, string TCName)
         {
-            trackingCat = Api.TrackingCategories.GetAllAsync().FirstOrDefault();
+            trackingCat = (await Api.TrackingCategories.GetAllAsync()).FirstOrDefault();
             if (trackingCat == null || trackingCat.Options.FirstOrDefault() == null)
             {
                 var option1 = new Option()
@@ -32,26 +32,26 @@ namespace CoreTests.Integration.Contacts
                 };
 
 
-                trackingCat = Api.TrackingCategories.CreateAsync(new TrackingCategory()
+                trackingCat = await Api.TrackingCategories.CreateAsync(new TrackingCategory()
                 {
                     Name = TCName,
                     Status = TrackingCategoryStatus.Active
                 });
 
 
-                Api.TrackingCategories[trackingCat.Id].Add(option1);
+                await (await Api.TrackingCategories.GetOptionsByIDAsync(trackingCat.Id)).AddAsync(option1);
 
-                trackingCat = Api.TrackingCategories.GetByIDAsync(trackingCat.Id);
+                trackingCat = await Api.TrackingCategories.GetByIDAsync(trackingCat.Id);
                 wasTCCreated = true;
             }
             return trackingCat;
         }
 
-        protected void deleteCreatedTC(TrackingCategory tc)
+        protected async Task deleteCreatedTC(TrackingCategory tc)
         {
             if (wasTCCreated)
             {
-                Api.TrackingCategories.DeleteAsync(trackingCat);
+                await Api.TrackingCategories.DeleteAsync(trackingCat);
                 wasTCCreated = false;
             }
         }

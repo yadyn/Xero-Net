@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xero.Api.Core.Model;
 using Xero.Api.Core.Model.Status;
 using Xero.Api.Core.Model.Types;
@@ -16,26 +17,26 @@ namespace CoreTests.Integration.Items.TrackedItems
         protected string DirectCostsAccountCode;
         protected string RevenueAccountCode;
 
-        public void Given_a_tracked_item()
+        public async Task Given_a_tracked_item()
         {
             if (string.IsNullOrEmpty(InventoryAccountCode))
             {
-                Given_an_inventory_account();
+                await Given_an_inventory_account();
             }
 
             if (string.IsNullOrEmpty(DirectCostsAccountCode))
             {
-                Given_a_direct_cost_account();
+                await Given_a_direct_cost_account();
             }
 
             if (string.IsNullOrEmpty(RevenueAccountCode))
             {
-                Given_a_revenue_account();
+                await Given_a_revenue_account();
             }
 
             var code = "Tracked Item" + Random.GetRandomString(10);
 
-            var item = Api.Items.CreateAsync(new Item
+            var item = await Api.Items.CreateAsync(new Item
             {
                 Code = code,
                 Description = "Sell me",
@@ -62,21 +63,21 @@ namespace CoreTests.Integration.Items.TrackedItems
             CreatedItem = item;
         }
 
-        public void Given_an_untracked_item()
+        public async Task Given_an_untracked_item()
         {
             if (string.IsNullOrEmpty(DirectCostsAccountCode))
             {
-                Given_a_direct_cost_account();
+                await Given_a_direct_cost_account();
             }
 
             if (string.IsNullOrEmpty(RevenueAccountCode))
             {
-                Given_a_revenue_account();
+                await Given_a_revenue_account();
             }
 
             var code = "Untracked Item" + Random.GetRandomString(10);
 
-            var item = Api.Items.CreateAsync(new Item
+            var item = await Api.Items.CreateAsync(new Item
             {
                 Code = code,
                 Description = "Sell me",
@@ -102,13 +103,13 @@ namespace CoreTests.Integration.Items.TrackedItems
             CreatedItem = item;
         }
 
-        protected void Given_a_direct_cost_account()
+        protected async Task Given_a_direct_cost_account()
         {
-            var directCostsAccount = Api.Accounts.Where("Type == \"DIRECTCOSTS\"").FindAsync().FirstOrDefault();
+            var directCostsAccount = (await Api.Accounts.Where("Type == \"DIRECTCOSTS\"").FindAsync()).FirstOrDefault();
 
             if (directCostsAccount == null)
             {
-                directCostsAccount = Api.Accounts.CreateAsync(new Account
+                directCostsAccount = await Api.Accounts.CreateAsync(new Account
                 {
                     Code = Random.GetRandomString(10),
                     Type = AccountType.DirectCosts,
@@ -120,13 +121,13 @@ namespace CoreTests.Integration.Items.TrackedItems
             DirectCostsAccountCode = directCostsAccount.Code;
         }
 
-        protected void Given_a_revenue_account()
+        protected async Task Given_a_revenue_account()
         {
-            var revenueAccount = Api.Accounts.Where("Type == \"REVENUE\"").FindAsync().FirstOrDefault();
+            var revenueAccount = (await Api.Accounts.Where("Type == \"REVENUE\"").FindAsync()).FirstOrDefault();
 
             if (revenueAccount == null)
             {
-                revenueAccount = Api.Accounts.CreateAsync(new Account
+                revenueAccount = await Api.Accounts.CreateAsync(new Account
                 {
                     Code = Random.GetRandomString(10),
                     Type = AccountType.Revenue,
@@ -138,13 +139,13 @@ namespace CoreTests.Integration.Items.TrackedItems
             RevenueAccountCode = revenueAccount.Code;
         }
 
-        protected void Given_an_inventory_account()
+        protected async Task Given_an_inventory_account()
         {
-            var inventoryAccount = Api.Accounts.Where("Type == \"INVENTORY\"").FindAsync().FirstOrDefault();
+            var inventoryAccount = (await Api.Accounts.Where("Type == \"INVENTORY\"").FindAsync()).FirstOrDefault();
 
             if (inventoryAccount == null)
             {
-                inventoryAccount = Api.Accounts.CreateAsync(new Account
+                inventoryAccount = await Api.Accounts.CreateAsync(new Account
                 {
                     Code = Random.GetRandomString(10),
                     Type = AccountType.Inventory,
@@ -156,7 +157,7 @@ namespace CoreTests.Integration.Items.TrackedItems
             InventoryAccountCode = inventoryAccount.Code;
         }
 
-        protected void Given_an_ACCPAY_invoice_using_the_item_with_code(string code)
+        protected async Task Given_an_ACCPAY_invoice_using_the_item_with_code(string code)
         {
             var invoice = new Invoice
             {
@@ -178,11 +179,11 @@ namespace CoreTests.Integration.Items.TrackedItems
 
             };
 
-            CreatedAccpayInvoice = Api.Invoices.CreateAsync(invoice);
+            CreatedAccpayInvoice = await Api.Invoices.CreateAsync(invoice);
         }
 
 
-        protected void Given_a_zero_total_ACCPAY_invoice_using_the_item_with_code(string code)
+        protected async Task Given_a_zero_total_ACCPAY_invoice_using_the_item_with_code(string code)
         {
             var invoice = new Invoice
             {
@@ -192,7 +193,7 @@ namespace CoreTests.Integration.Items.TrackedItems
                 DueDate = DateTime.UtcNow.AddDays(90),
                 LineAmountTypes = LineAmountType.Inclusive,
                 Status = InvoiceStatus.Authorised,
-				LineItems = new List<LineItem>
+                LineItems = new List<LineItem>
                 {
                     new LineItem
                     {
@@ -211,10 +212,10 @@ namespace CoreTests.Integration.Items.TrackedItems
                 
             };
 
-            CreatedAccpayInvoice = Api.Invoices.CreateAsync(invoice);
+            CreatedAccpayInvoice = await Api.Invoices.CreateAsync(invoice);
         }
 
-        protected void Given_an_ACCREC_invoice_using_the_item_with_code(string code)
+        protected async Task Given_an_ACCREC_invoice_using_the_item_with_code(string code)
         {
             var invoice = new Invoice
             {
@@ -235,10 +236,10 @@ namespace CoreTests.Integration.Items.TrackedItems
                 }
             };
 
-            CreatedAccrecInvoice = Api.Invoices.CreateAsync(invoice);
+            CreatedAccrecInvoice = await Api.Invoices.CreateAsync(invoice);
         }
 
-        protected void Given_a_zero_total_ACCREC_invoice_using_the_item_with_code(string code)
+        protected async Task Given_a_zero_total_ACCREC_invoice_using_the_item_with_code(string code)
         {
             var invoice = new Invoice
             {
@@ -267,7 +268,7 @@ namespace CoreTests.Integration.Items.TrackedItems
 
             };
 
-            CreatedAccrecInvoice = Api.Invoices.CreateAsync(invoice);
+            CreatedAccrecInvoice = await Api.Invoices.CreateAsync(invoice);
         }
     }
 }

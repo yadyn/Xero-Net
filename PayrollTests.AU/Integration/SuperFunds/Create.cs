@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using Xero.Api.Payroll.Australia.Model;
 using Xero.Api.Payroll.Australia.Model.Types;
@@ -12,9 +13,9 @@ namespace PayrollTests.AU.Integration.SuperFunds
     public class Create : ApiWrapperTest
     {
         [Test]
-        public void create_superfund()
+        public async Task create_superfund()
         {
-            var sf = Api.CreateAsync(new SuperFund
+            var sf = await Api.CreateAsync(new SuperFund
             {
                 Type = SuperfundType.Regulated,
                 Abn = 78984178687,

@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace PayrollTests.US.Integration.Employees
@@ -7,24 +8,24 @@ namespace PayrollTests.US.Integration.Employees
     public class Find : EmployeesTest
     {
         [Test]
-        public void find_all_employees()
+        public async Task find_all_employees()
         {
-            var emp = Api.Employees.FindAsync();
+            var emp = await Api.Employees.FindAsync();
             Assert.Greater(emp.Count(), 0);
         }
 
         [Test]
-        public void find_by_page()
+        public async Task find_by_page()
         {
-            var emp = Api.Employees.Page(1).FindAsync();
+            var emp = await Api.Employees.Page(1).FindAsync();
             Assert.Greater(emp.Count(), 0);
         }
 
         [Test]
-        public void find_by_id()
+        public async Task find_by_id()
         {
-            var expected = Given_an_employee().Id;
-            var employee = Api.Employees.FindAsync(expected);
+            var expected = (await Given_an_employee()).Id;
+            var employee = await Api.Employees.FindAsync(expected);
             Assert.AreEqual(expected, employee.Id);
         }
 

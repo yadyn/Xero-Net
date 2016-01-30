@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Runtime.Hosting;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using Xero.Api.Core.Model;
 using Xero.Api.Core.Model.Types;
@@ -11,34 +12,34 @@ namespace CoreTests.Integration.Accounts
     public class Find : ApiWrapperTest
     {
         [Test]
-        public void find_by_value()
+        public async Task find_by_value()
         {
-            var type = Api.Accounts
+            var type = (await Api.Accounts
                 .Where("Type == \"OVERHEADS\"")
-                .FindAsync()
+                .FindAsync())
                 .ToList().First().Type;
 
             Assert.AreEqual(AccountType.Overheads, type);
         }
 
         [Test]
-        public void find_by_id()
+        public async Task find_by_id()
         {
-            var expected = Api.Accounts
+            var expected = (await Api.Accounts
                 .Where("Type == \"REVENUE\"")
-                .FindAsync()
+                .FindAsync())
                 .First()
                 .Id;
           
-            var id = Api.Accounts.Find(expected).Id;
+            var id = (await Api.Accounts.FindAsync(expected)).Id;
             
             Assert.AreEqual(expected, id);
         }
 
         [Test]
-        public void finding_a_non_system_account_has_null_SystemAccount()
+        public async Task finding_a_non_system_account_has_null_SystemAccount()
         {
-            var newNonSystemAccount = Api.CreateAsync(new Account
+            var newNonSystemAccount = await Api.CreateAsync(new Account
             {
                 Code = Random.GetRandomString(10),
                 Type = AccountType.OtherIncome,
@@ -46,13 +47,13 @@ namespace CoreTests.Integration.Accounts
                 Name = "Consultation " + Random.GetRandomString(10)             
             });
 
-            var account = Api.Accounts.Find(newNonSystemAccount.Id);
+            var account = await Api.Accounts.FindAsync(newNonSystemAccount.Id);
 
             Assert.AreEqual(null, account.SystemAccount);
         }
 
          [Test]
-        public void find_accounts_ifmodifiedsince()
+        public async Task find_accounts_ifmodifiedsince()
         {
             var newNonSystemAccount = Api.CreateAsync(new Account
             {
@@ -62,7 +63,7 @@ namespace CoreTests.Integration.Accounts
                 Name = "Consultation " + Random.GetRandomString(10)
             });
 
-            var accounts = Api.Accounts
+            var accounts = await Api.Accounts
                 .ModifiedSince(DateTime.Now.AddMinutes(-1))
                 .FindAsync();
 

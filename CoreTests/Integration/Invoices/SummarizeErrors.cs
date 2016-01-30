@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using Xero.Api.Core.Model;
 using Xero.Api.Core.Model.Status;
@@ -13,9 +14,9 @@ namespace CoreTests.Integration.Invoices
     public class SummarizeErrors : InvoicesTest
     {
         [Test]
-        public void summariseErrors_gives_200()
+        public async Task summariseErrors_gives_200()
         {
-            var invoices = Given_a_bad_invoice(summariseErrors: false);
+            var invoices = await Given_a_bad_invoice(summariseErrors: false);
 
             Assert.True(invoices.Count(p => p.ValidationStatus == ValidationStatus.Error) == 1);
             Assert.True(invoices.Count(p => p.ValidationStatus == ValidationStatus.Ok) == 1);
@@ -23,10 +24,10 @@ namespace CoreTests.Integration.Invoices
 
         [Test] public void errors_gives_validation_exception()
         {
-            Assert.Throws<ValidationException>(() => Given_a_bad_invoice());
+            Assert.Throws<ValidationException>(async () => await Given_a_bad_invoice());
         }
 
-        private IEnumerable<Invoice> Given_a_bad_invoice(InvoiceType type = InvoiceType.AccountsPayable, InvoiceStatus status = InvoiceStatus.Draft, bool summariseErrors = true)
+        private Task<IEnumerable<Invoice>> Given_a_bad_invoice(InvoiceType type = InvoiceType.AccountsPayable, InvoiceStatus status = InvoiceStatus.Draft, bool summariseErrors = true)
         {
             Api.Invoices.SummarizeErrors(summariseErrors);
             return Api.CreateAsync(new[]

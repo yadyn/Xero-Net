@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Net;
+using System.Threading.Tasks;
 using CoreTests.Integration.Files.Support;
 using NUnit.Framework;
 using Xero.Api.Core.Model;
@@ -11,108 +12,105 @@ namespace CoreTests.Integration.Files.Files
     [TestFixture]
     public class AddFileTest : FilesTest
     {
-      
-        
+
+
         [Test]
-        public void can_get_all_files_like_this()
+        public async Task can_get_all_files_like_this()
         {
-            var result = Api.Files.FindAsync();
+            var result = await Api.Files.FindAsync();
 
             Assert.True(result != null);
         }
 
         [Test]
-        public void can_get_the_content_of_a_file_like_this()
+        public async Task can_get_the_content_of_a_file_like_this()
         {
             var filename = "My Test File " + Guid.NewGuid() + ".png";
 
-            var inboxId = Api.Inbox.GetInboxFolderAsync.Id;
+            var inboxId = (await Api.Inbox.GetInboxFolderAsync()).Id;
 
-            var id = Given_a_file_in(inboxId, filename);
+            var id = await Given_a_file_in(inboxId, filename);
 
-            var content = Api.Files.GetContentAsync(id,"image/png");
-            
-            Assert.IsTrue(StructuralComparisons.StructuralEqualityComparer.Equals(content,exampleFile));
+            var content = await Api.Files.GetContentAsync(id, "image/png");
+
+            Assert.IsTrue(StructuralComparisons.StructuralEqualityComparer.Equals(content, exampleFile));
         }
-        
-       [Test]
-        public void can_remove_a_file_like_this()
+
+        [Test]
+        public async Task can_remove_a_file_like_this()
         {
-            var inboxId = Api.Inbox.GetInboxFolderAsync.Id;
+            var inboxId = (await Api.Inbox.GetInboxFolderAsync()).Id;
 
-            var result = Given_a_file_in(inboxId, "Test " + Guid.NewGuid()  + ".png");
+            var result = await Given_a_file_in(inboxId, "Test " + Guid.NewGuid() + ".png");
 
-            Api.Files.RemoveAsync(result);
+            await Api.Files.RemoveAsync(result);
 
-            var notfound= Api.Files[result];  
+            var notfound = await Api.Files.FindAsync(result);
 
             Assert.IsNull(notfound);
 
         }
 
-       [Test]
-       public void can_rename_a_file_like_this()
-       {
-           var inboxId = Api.Inbox.GetInboxFolderAsync.Id;
+        [Test]
+        public async Task can_rename_a_file_like_this()
+        {
+            var inboxId = (await Api.Inbox.GetInboxFolderAsync()).Id;
 
-           var result = Given_a_file_in(inboxId, "Test " + Guid.NewGuid()  + ".png");
+            var result = await Given_a_file_in(inboxId, "Test " + Guid.NewGuid() + ".png");
 
-           var copy = Api.Files[result];
+            var copy = await Api.Files.FindAsync(result);
 
-           var NewName = "someother name";
+            var NewName = "someother name";
 
-           var updateResult = Api.Files.Rename(copy.Id, NewName);
+            var updateResult = await Api.Files.RenameAsync(copy.Id, NewName);
 
-           Assert.IsTrue(updateResult.Name == NewName);
+            Assert.IsTrue(updateResult.Name == NewName);
 
-       }
+        }
 
-       [Test]
-       public void can_move_a_file_like_this()
-       {
-           var inboxId = Api.Inbox.GetInboxFolderAsync.Id;
+        [Test]
+        public async Task can_move_a_file_like_this()
+        {
+            var inboxId = (await Api.Inbox.GetInboxFolderAsync()).Id;
 
-           var result = Given_a_file_in(inboxId, "Test " + Guid.NewGuid() + ".png");
+            var result = await Given_a_file_in(inboxId, "Test " + Guid.NewGuid() + ".png");
 
-           var newFolder = Api.Folders.AddAsync("stuff");
+            var newFolder = await Api.Folders.AddAsync("stuff");
 
-           var updateResult = Api.Files.MoveAsync(result, newFolder.Id);
+            var updateResult = await Api.Files.MoveAsync(result, newFolder.Id);
 
-           Assert.IsTrue(updateResult.FolderId == newFolder.Id);
+            Assert.IsTrue(updateResult.FolderId == newFolder.Id);
 
-       }
-        
-       [Test]
-       public void cannot_add_a_file_with_bad_filename_charactors()
-       {
-           var inboxId = Api.Inbox.GetInboxFolderAsync.Id;
+        }
 
-           char[] badchar = System.IO.Path.GetInvalidFileNameChars();
+        [Test]
+        public async Task cannot_add_a_file_with_bad_filename_charactors()
+        {
+            var inboxId = (await Api.Inbox.GetInboxFolderAsync()).Id;
 
-           var filename = "Inbox file " + badchar[0] + badchar[3] + badchar[2] + ".png"; ;
+            char[] badchar = System.IO.Path.GetInvalidFileNameChars();
 
-           Assert.Throws<WebException>(() =>
-           {
-               Api.Files.AddAsync( inboxId, create_file_with_name(filename), exampleFile);
-           });
-       }
+            var filename = "Inbox file " + badchar[0] + badchar[3] + badchar[2] + ".png"; ;
 
-       private File create_file_with_name(string filename)
-       {
-           return new Xero.Api.Core.Model.File()
-           {
-               Name = filename,
-               FileName = filename,
-               Mimetype = "image/png",
-               User = new FilesUser()
-               {
-                   FirstName = "Bart",
-                   LastName = "Simpson",
-                   FullName = "Bart Simpson",
-                   Name = "Bart@gmail.com"
-               }
-           };
-       }
+            Assert.Throws<WebException>(async () => await Api.Files.AddAsync(inboxId, create_file_with_name(filename), exampleFile));
+        }
+
+        private File create_file_with_name(string filename)
+        {
+            return new Xero.Api.Core.Model.File()
+            {
+                Name = filename,
+                FileName = filename,
+                Mimetype = "image/png",
+                User = new FilesUser()
+                {
+                    FirstName = "Bart",
+                    LastName = "Simpson",
+                    FullName = "Bart Simpson",
+                    Name = "Bart@gmail.com"
+                }
+            };
+        }
     }
 
 }

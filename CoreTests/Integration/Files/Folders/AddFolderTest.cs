@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using CoreTests.Integration.Files.Support;
 using NUnit.Framework;
 
@@ -6,35 +7,28 @@ namespace CoreTests.Integration.Files.Folders
 {
     public class AddFolderTest : FilesTest
     {
-
         [Test]
-        public void can_create_a_folder_like_this()
+        public async Task can_create_a_folder_like_this()
         {
-            var result = Api.Folders.AddAsync("Test Folder" + Guid.NewGuid());
+            var result = await Api.Folders.AddAsync("Test Folder" + Guid.NewGuid());
         }
 
-
         [Test]
-        public void can_get_all_folders_like_this()
+        public async Task can_get_all_folders_like_this()
         {
-
-            var allFolders = Api.Folders.GetFoldersAsync;
+            var allFolders = await Api.Folders.GetFoldersAsync();
 
             Assert.True(allFolders[0].Name == "Inbox");
 
             Assert.True(allFolders[1].Name == "Contracts");
-
         }
 
         [Test]
-        public void can_remove_a_folder_like_this()
+        public async Task can_remove_a_folder_like_this()
         {
+            var folder = await Api.Folders.AddAsync("Test Folder" + Guid.NewGuid());
 
-            var folder = Api.Folders.AddAsync("Test Folder" + Guid.NewGuid());
-
-            Api.Folders.Remove(folder.Id); // Hint ->folder is empty
-
+            await Api.Folders.RemoveAsync(folder.Id); // Hint ->folder is empty
         }
-        
       }
 }

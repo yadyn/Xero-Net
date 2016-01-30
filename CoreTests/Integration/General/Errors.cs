@@ -11,19 +11,19 @@ namespace CoreTests.Integration.General
         [Test]
         public void not_found()
         {
-            Assert.Throws<NotFoundException>(() => Api.Invoices.FindAsync("ThisIsNotThere"));
+            Assert.Throws<NotFoundException>(async () => await Api.Invoices.FindAsync("ThisIsNotThere"));
         }
 
         [Test]
         public void bad_query()
         {
-            Assert.Throws<BadRequestException>(() => Api.Invoices.Where("Bob == Robert").FindAsync());
+            Assert.Throws<BadRequestException>(async () => await Api.Invoices.Where("Bob == Robert").FindAsync());
         }
 
         [Test]
         public void validation_error()
         {
-            Assert.Throws<ValidationException>(() => Api.Invoices.CreateAsync(new Invoice
+            Assert.Throws<ValidationException>(async () => await Api.Invoices.CreateAsync(new Invoice
             {
                 LineItems = new List<LineItem>
                 {
