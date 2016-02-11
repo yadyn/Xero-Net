@@ -25,7 +25,7 @@ namespace Xero.Api.Payroll
 
         public AmericanPayroll(string baseUri, ICertificateAuthenticator auth, IConsumer consumer, IUser user,
             IJsonObjectMapper readMapper, IXmlObjectMapper writeMapper)
-            : base(baseUri, auth, consumer, user, readMapper, writeMapper, null)
+            : this(baseUri, auth, consumer, user, readMapper, writeMapper, null)
         {
         }
 
