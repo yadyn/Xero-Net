@@ -31,7 +31,7 @@ namespace PayrollTests.AU.Integration.Employees
                         {
                             AccountName = "Cheque",
                             AccountNumber = "645645645",
-                            BankStateBranch = 121232,
+                            BankStateBranch = "021232",
                             Remainder = true,
                             StatementText = "Salary"
                         }

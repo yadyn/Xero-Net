@@ -11,7 +11,15 @@ using Xero.Api.Infrastructure.Http;
 
 namespace Xero.Api.Core.Endpoints
 {
-    public class FoldersEndpoint : XeroUpdateEndpoint<FoldersEndpoint, Model.Folder, FolderRequest, FolderResponse>
+    public interface IFoldersEndpoint : IXeroUpdateEndpoint<FoldersEndpoint, Model.Folder, FolderRequest, FolderResponse>
+    {
+        Task<FoldersResponse[]> GetFoldersAsync();
+        Task<FilePageResponse> AddAsync(string folderName);
+        Task RemoveAsync(Guid id);
+        Task<FoldersResponse> RenameAsync(Guid id, string name);
+    }
+
+    public class FoldersEndpoint : XeroUpdateEndpoint<FoldersEndpoint, Model.Folder, FolderRequest, FolderResponse>, IFoldersEndpoint
     {
         internal FoldersEndpoint(XeroHttpClient client)
             : base(client, "files.xro/1.0/Folders")

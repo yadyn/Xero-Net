@@ -11,7 +11,28 @@ using Xero.Api.Infrastructure.Http;
 
 namespace Xero.Api.Core.Endpoints
 {
-    public class ReportsEndpoint : XeroReadEndpoint<ReportsEndpoint, Report, ReportsResponse>
+    public interface IReportsEndpoint : IXeroReadEndpoint<ReportsEndpoint, Report, ReportsResponse>
+    {
+        Task<Report> GetPublishedReportAsync(string id);
+        Task<Report> GetPublishedReportAsync(Guid id);
+        Task<IEnumerable<string>> GetPublishedAsync();
+        IEnumerable<string> Named { get; }
+        Task<Report> GetAgedPayablesAsync(Guid contact, DateTime? date = null, DateTime? from = null, DateTime? to = null);
+        Task<Report> GetAgedReceivablesAsync(Guid contact, DateTime? date = null, DateTime? from = null, DateTime? to = null);
+        Task<Report> GetTenNinetyNineAsync(DateTime? year);
+        Task<Report> GetBalanceSheetAsync(DateTime date, Guid? tracking1 = null, Guid? tracking2 = null,
+            bool standardLayout = false);
+        Task<Report> GetBankStatementAsync(Guid account, DateTime? from = null, DateTime? to = null);
+        Task<Report> GetBankSummaryAsync(DateTime? from = null, DateTime? to = null);
+        Task<Report> GetBudgetSummaryAsync(DateTime? date = null, int? periods = null, BudgetSummaryTimeframeType? timeFrame = null);
+        Task<Report> GetExecutiveSummaryAsync(DateTime? date = null);
+        Task<Report> GetProfitAndLossAsync(DateTime? date, DateTime? from = null, DateTime? to = null,
+            Guid? trackingCategory = null, Guid? trackingOption = null, Guid? trackingCategory2 = null,
+            Guid? trackingOption2 = null, bool? standardLayout = null);
+        Task<Report> GetTrailBalanceAsync(DateTime? date = null, bool? paymentsOnly = null);
+    }
+
+    public class ReportsEndpoint : XeroReadEndpoint<ReportsEndpoint, Report, ReportsResponse>, IReportsEndpoint
     {
         public ReportsEndpoint(XeroHttpClient client)
             : base(client, "/api.xro/2.0/Reports")
@@ -47,7 +68,7 @@ namespace Xero.Api.Core.Endpoints
 
             parameters.AddYear("reportYear", year);
 
-           AddParameters(parameters);
+            AddParameters(parameters);
 
             return FindAsync(NamedReportType.TenNinetyNine.ToString());
         }
@@ -131,7 +152,7 @@ namespace Xero.Api.Core.Endpoints
         }
 
         public Task<Report> GetProfitAndLossAsync(DateTime? date, DateTime? from = null, DateTime? to = null,
-            Guid? trackingCategory = null, Guid? trackingOption = null, Guid? trackingCategory2 = null, 
+            Guid? trackingCategory = null, Guid? trackingOption = null, Guid? trackingCategory2 = null,
             Guid? trackingOption2 = null, bool? standardLayout = null)
         {
             var parameters = new NameValueCollection();

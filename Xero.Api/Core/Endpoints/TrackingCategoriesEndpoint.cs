@@ -11,7 +11,18 @@ using Xero.Api.Infrastructure.Http;
 
 namespace Xero.Api.Core.Endpoints
 {
-    public class TrackingCategoriesEndpoint : XeroUpdateEndpoint<TrackingCategoriesEndpoint, TrackingCategory, TrackingCategoriesRequest, TrackingCategoriesResponse>
+    public interface ITrackingCategoriesEndpoint : IXeroUpdateEndpoint<TrackingCategoriesEndpoint, TrackingCategory, TrackingCategoriesRequest, TrackingCategoriesResponse>
+    {
+        Task<IOptionCollection> GetOptionsByIDAsync(Guid id);
+        Task<List<TrackingCategory>> GetAllAsync();
+        TrackingCategoriesEndpoint IncludeArchived(bool include);
+        Task<TrackingCategory> GetByIDAsync(Guid id);
+        Task<TrackingCategory> DeleteAsync(TrackingCategory trackingCategory);
+        Task<Option> DeleteTrackingOptionAsync(TrackingCategory trackingCategory, Option option);
+        Task<TrackingCategory> AddAsync(TrackingCategory trackingCategory);
+    }
+
+    public class TrackingCategoriesEndpoint : XeroUpdateEndpoint<TrackingCategoriesEndpoint, TrackingCategory, TrackingCategoriesRequest, TrackingCategoriesResponse>, ITrackingCategoriesEndpoint
     {
         public TrackingCategoriesEndpoint(XeroHttpClient client) :
             base(client, "/api.xro/2.0/TrackingCategories")
@@ -28,7 +39,7 @@ namespace Xero.Api.Core.Endpoints
             return this;
         }
 
-        //public OptionCollection this[Guid id]
+        //public IOptionCollection this[Guid id]
         //{
         //    get
         //    {
@@ -51,7 +62,7 @@ namespace Xero.Api.Core.Endpoints
             return trackingCat;
         }
 
-        public async Task<OptionCollection> GetOptionsByIDAsync(Guid id)
+        public async Task<IOptionCollection> GetOptionsByIDAsync(Guid id)
         {
             var endpoint = string.Format("/api.xro/2.0/TrackingCategories/{0}", id);
 
@@ -82,7 +93,7 @@ namespace Xero.Api.Core.Endpoints
             return track.Values.FirstOrDefault();
         }
 
-        public new async Task<TrackingCategory> UpdateAsync(TrackingCategory trackingCategory)
+        public override async Task<TrackingCategory> UpdateAsync(TrackingCategory trackingCategory)
         {
             var endpoint = string.Format("/api.xro/2.0/TrackingCategories/{0}", trackingCategory.Id.ToString());
 
@@ -144,11 +155,20 @@ namespace Xero.Api.Core.Endpoints
         }
     }
 
+    public interface IOptionCollection :
+        IXeroUpdateEndpoint
+            <TrackingCategoriesEndpoint, TrackingCategory, TrackingCategoriesRequest, TrackingCategoriesResponse>
+    {
+        Task<List<Option>> AddAsync(Option option);
+        Task<List<Option>> AddAsync(List<Option> options);
+        Task<Option> UpdateOptionAsync(Option option);
+    }
+
     public class OptionCollection :
-        XeroUpdateEndpoint<TrackingCategoriesEndpoint, TrackingCategory, TrackingCategoriesRequest, TrackingCategoriesResponse>
+        XeroUpdateEndpoint<TrackingCategoriesEndpoint, TrackingCategory, TrackingCategoriesRequest, TrackingCategoriesResponse>, IOptionCollection
     {
         public TrackingCategory _trackingCat;
-        private XeroHttpClient _client;
+        private readonly XeroHttpClient _client;
 
         public OptionCollection(XeroHttpClient client, TrackingCategory trackingCat)
             : base(client, "/api.xro/2.0/TrackingCategories")

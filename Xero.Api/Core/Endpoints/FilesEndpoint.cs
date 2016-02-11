@@ -11,44 +11,53 @@ using Xero.Api.Infrastructure.Http;
 
 namespace Xero.Api.Core.Endpoints
 {
-    public class FilesEndpoint : XeroUpdateEndpoint<FilesEndpoint,Model.File,FilesRequest,FilesResponse>
+    public interface IFilesEndpoint : IXeroUpdateEndpoint<FilesEndpoint, Model.File, FilesRequest, FilesResponse>
     {
-        
+        Task<Model.File> RenameAsync(Guid id, string name);
+        Task<Model.File> MoveAsync(Guid id, Guid newFolder);
+        Task<Model.File> AddAsync(Guid folderId, Model.File file, byte[] data);
+        Task<Model.File> RemoveAsync(Guid fileid);
+        Task<byte[]> GetContentAsync(Guid id, string contentType);
+    }
+
+    public class FilesEndpoint : XeroUpdateEndpoint<FilesEndpoint, Model.File, FilesRequest, FilesResponse>, IFilesEndpoint
+    {
+
         internal FilesEndpoint(XeroHttpClient client)
             : base(client, "files.xro/1.0/Files")
         {
-            
+
         }
-        
+
         //public Model.File this[Guid id]
         //{
         //    get
         //    {
         //        var result = Find(id);
-        //        return result; 
+        //        return result;
         //    }
         //}
-        
-        public new async Task<IList<Model.File>> FindAsync()
-        {
-            var response = HandleFilesResponse(await Client
-                .Client.GetAsync("files.xro/1.0/Files","" ));
 
-            return response.Items;
-        }
-
-        public new async Task<Model.File> FindAsync(Guid fileId)
+        public override async Task<IEnumerable<Model.File>> FindAsync()
         {
             var response = HandleFilesResponse(await Client
                 .Client.GetAsync("files.xro/1.0/Files", ""));
 
-            return response.Items.SingleOrDefault(i=>i.Id == fileId) ;
+            return response.Items;
+        }
+
+        public override async Task<Model.File> FindAsync(Guid fileId)
+        {
+            var response = HandleFilesResponse(await Client
+                .Client.GetAsync("files.xro/1.0/Files", ""));
+
+            return response.Items.SingleOrDefault(i => i.Id == fileId);
         }
 
         public async Task<Model.File> RenameAsync(Guid id, string name)
         {
             var response = HandleFileResponse(await Client
-                .Client.PutAsync("files.xro/1.0/Files/" + id, "{\"Name\":\"" + name + "\"}","application/json"));
+                .Client.PutAsync("files.xro/1.0/Files/" + id, "{\"Name\":\"" + name + "\"}", "application/json"));
 
 
             return response;
@@ -65,10 +74,10 @@ namespace Xero.Api.Core.Endpoints
 
         public async Task<Model.File> AddAsync(Guid folderId, Model.File file, byte[] data)
         {
-           
+
             var response = HandleFileResponse(await Client
                 .Client
-                .PostMultipartFormAsync("files.xro/1.0/Files/"+ folderId, file.Mimetype,  file.Name, file.FileName, data));
+                .PostMultipartFormAsync("files.xro/1.0/Files/" + folderId, file.Mimetype, file.Name, file.FileName, data));
 
             return response;
         }
@@ -77,7 +86,7 @@ namespace Xero.Api.Core.Endpoints
         {
             var response = HandleFileResponse(await Client
                 .Client
-                .DeleteAsync("files.xro/1.0/Files/"+fileid.ToString()));
+                .DeleteAsync("files.xro/1.0/Files/" + fileid.ToString()));
 
             return response;
         }
@@ -92,7 +101,7 @@ namespace Xero.Api.Core.Endpoints
 
                 return ms.ToArray();
             }
-           
+
         }
 
         private Model.File HandleFileResponse(Infrastructure.Http.Response response)
@@ -124,8 +133,5 @@ namespace Xero.Api.Core.Endpoints
 
             return null;
         }
-
-
-       
     }
 }

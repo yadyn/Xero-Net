@@ -11,13 +11,20 @@ using Xero.Api.Infrastructure.Http;
 
 namespace Xero.Api.Core.Endpoints
 {
-    public class ContactGroupsEndpoint : XeroUpdateEndpoint<ContactGroupsEndpoint,ContactGroup,ContactGroupsRequest,ContactGroupsResponse> 
+    public interface IContactGroupsEndpoint :
+        IXeroUpdateEndpoint<ContactGroupsEndpoint, ContactGroup, ContactGroupsRequest, ContactGroupsResponse>
+    {
+        Task<IContactCollection> GetContactsAsync(Guid guid);
+        Task<ContactGroup> AddAsync(ContactGroup contactGroup);
+    }
+    public class ContactGroupsEndpoint : XeroUpdateEndpoint<ContactGroupsEndpoint,ContactGroup,ContactGroupsRequest,ContactGroupsResponse>,
+        IContactGroupsEndpoint
     {
         public ContactGroupsEndpoint(XeroHttpClient client) : base(client,"/api.xro/2.0/ContactGroups")
         {
         }
 
-        //public ContactCollection this[Guid guid]
+        //public IContactCollection this[Guid guid]
         //{
         //    get
         //    {
@@ -34,7 +41,7 @@ namespace Xero.Api.Core.Endpoints
         //    }
         //}
 
-        public async Task<ContactCollection> GetContactsAsync(Guid guid)
+        public async Task<IContactCollection> GetContactsAsync(Guid guid)
         {
             var endpoint = string.Format("/api.xro/2.0/ContactGroups/{0}", guid);
 
@@ -72,10 +79,19 @@ namespace Xero.Api.Core.Endpoints
         }
     }
 
-    public class ContactCollection  : XeroUpdateEndpoint<ContactGroupsEndpoint, ContactGroup, ContactGroupsRequest, ContactGroupsResponse>
+    public interface IContactCollection :
+        IXeroUpdateEndpoint<ContactGroupsEndpoint, ContactGroup, ContactGroupsRequest, ContactGroupsResponse>
     {
-        private ContactGroup _group;
-        private XeroHttpClient _client;
+        Task ClearAsync();
+        Task AddAsync(Contact contact);
+        Task AddRangeAsync(List<Contact> contacts);
+        Task RemoveAsync(Guid guid);
+    }
+
+    public class ContactCollection  : XeroUpdateEndpoint<ContactGroupsEndpoint, ContactGroup, ContactGroupsRequest, ContactGroupsResponse>, IContactCollection
+    {
+        private readonly ContactGroup _group;
+        private readonly XeroHttpClient _client;
 
 
         public ContactCollection(XeroHttpClient client, ContactGroup group)

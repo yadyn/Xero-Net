@@ -15,11 +15,11 @@ namespace PayrollTests.AU.Integration.SuperFunds
             var sf = await Api.CreateAsync(new SuperFund
             {
                 Type = SuperfundType.SelfManaged,
-                Abn = 11001032511,
+                Abn = "01001032511",
                 Name = "Clive Monk Superannuation Fund",
-                BankStateBranch = 159357,
+                BankStateBranch = "159357",
                 AccountName = "Clive Monk Superannuation Fund",
-                AccountNumber = 111222333,
+                AccountNumber = "111222333",
             });
 
 
@@ -27,11 +27,11 @@ namespace PayrollTests.AU.Integration.SuperFunds
             {
                 Id = sf.Id,
                 Type = SuperfundType.SelfManaged,
-                Abn = 11001032511,
+                Abn = "11001032511",
                 Name = "Clive Superannuation Fund",
-                BankStateBranch = 159357,
+                BankStateBranch = "059357",
                 AccountName = "Test",
-                AccountNumber = 654645645,
+                AccountNumber = "654645645",
             });
 
         }

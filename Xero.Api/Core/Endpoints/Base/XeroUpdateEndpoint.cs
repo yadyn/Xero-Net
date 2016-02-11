@@ -8,7 +8,7 @@ using Xero.Api.Infrastructure.Interfaces;
 namespace Xero.Api.Core.Endpoints.Base
 {
     public abstract class XeroUpdateEndpoint<T, TResult, TRequest, TResponse>
-        : XeroCreateEndpoint<T, TResult, TRequest, TResponse>
+        : XeroCreateEndpoint<T, TResult, TRequest, TResponse>, IXeroUpdateEndpoint<T, TResult, TRequest, TResponse>
         where T : XeroReadEndpoint<T, TResult, TResponse>
         where TResponse : IXeroResponse<TResult>, new()
         where TRequest : IXeroRequest<TResult>, new()
@@ -26,7 +26,7 @@ namespace Xero.Api.Core.Endpoints.Base
             return PostAsync(request);
         }
 
-        public async Task<TResult> UpdateAsync(TResult item)
+        public virtual async Task<TResult> UpdateAsync(TResult item)
         {
             return (await UpdateAsync(new[] { item })).First();
         }

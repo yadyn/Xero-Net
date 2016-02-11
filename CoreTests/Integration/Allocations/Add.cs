@@ -16,7 +16,7 @@ namespace CoreTests.Integration.Allocations
         {
             var creditNote = await new CreditNotes.CreditNotesTest().Given_an_authorised_creditnote(CreditNoteType.AccountsReceivable);
             var invoice = await new Create().Given_an_authorised_invoice(InvoiceType.AccountsReceivable);
-            var expected = Math.Min(creditNote.Total, invoice.Total.GetValueOrDefault());
+            var expected = Math.Min(creditNote.Total.GetValueOrDefault(), invoice.Total.GetValueOrDefault());
 
             var result = await Api.Allocations.AddAsync(new Allocation
                 {
@@ -35,7 +35,7 @@ namespace CoreTests.Integration.Allocations
         {            
             var creditNote = await new CreditNotes.CreditNotesTest().Given_an_authorised_creditnote();
             var invoice = await new Create().Given_an_authorised_invoice();
-            var expected = Math.Min(creditNote.Total, invoice.Total.GetValueOrDefault());
+            var expected = Math.Min(creditNote.Total.GetValueOrDefault(), invoice.Total.GetValueOrDefault());
 
             var result = await Api.Allocations.AddAsync(new Allocation
             {
@@ -55,7 +55,7 @@ namespace CoreTests.Integration.Allocations
         {
             var creditNote = await new CreditNotes.CreditNotesTest().Given_an_authorised_creditnote();
             var invoice = await new Create().Given_an_authorised_invoice();
-            var expected = Math.Min(creditNote.Total, invoice.Total.GetValueOrDefault());
+            var expected = Math.Min(creditNote.Total.GetValueOrDefault(), invoice.Total.GetValueOrDefault());
 
             await Api.Allocations.AddAsync(new Allocation
             {
@@ -115,7 +115,7 @@ namespace CoreTests.Integration.Allocations
         {
             var creditNote = await new CreditNotes.CreditNotesTest().Given_an_authorised_creditnote();
             var invoice = await new Create().Given_an_authorised_invoice();
-            var amount = Math.Min(creditNote.Total, invoice.Total.GetValueOrDefault());
+            var amount = Math.Min(creditNote.Total.GetValueOrDefault(), invoice.Total.GetValueOrDefault());
 
             await Api.Allocations.AddAsync(new Allocation
             {

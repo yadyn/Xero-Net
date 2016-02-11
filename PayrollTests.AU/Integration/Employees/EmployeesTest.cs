@@ -61,7 +61,7 @@ namespace PayrollTests.AU.Integration.Employees
                 return (await Api.CreateAsync(new SuperFund
                 {
                     Type = SuperfundType.Regulated,
-                    Abn = 78984178687,
+                    Abn = "78984178687",
                 })).Id;
             }
         }
