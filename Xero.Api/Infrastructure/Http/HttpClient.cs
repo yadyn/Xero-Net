@@ -201,7 +201,7 @@ namespace Xero.Api.Infrastructure.Http
             
             AddHeaders(request);
 
-            request.UserAgent = !string.IsNullOrWhiteSpace(UserAgent) ? UserAgent : "Xero Api wrapper - " + Consumer.ConsumerKey;
+            request.UserAgent = !string.IsNullOrWhiteSpace(UserAgent) ? UserAgent : "Xero Api wrapper - " + Consumer?.ConsumerKey ?? "No Consumer Key";
             
             if (ClientCertificate != null)
             {
